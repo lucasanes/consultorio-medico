@@ -8,7 +8,7 @@ import {
   Post,
   ValidationPipe,
 } from '@nestjs/common';
-import { FindOneParams } from 'src/dto/FindOneParams';
+import { FindOneParams } from '../../dto/FindOneParams';
 import { DoctorService } from './doctor.service';
 import { CreateDoctorDTO } from './dto/create-doctor';
 import { UpdateDoctorDTO } from './dto/update-doctor';

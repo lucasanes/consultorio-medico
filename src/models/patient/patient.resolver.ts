@@ -1,5 +1,5 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { FindOneParamsGraphQL } from 'src/dto/FindOneParamsGraphQL';
+import { FindOneParamsGraphQL } from '../../dto/FindOneParamsGraphQL';
 import { CreatePatientDTO } from './dto/create-patient';
 import { UpdatePatientDTO } from './dto/update-patient';
 import { Patient } from './patient.model';

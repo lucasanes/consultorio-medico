@@ -1,5 +1,5 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { FindOneParamsGraphQL } from 'src/dto/FindOneParamsGraphQL';
+import { FindOneParamsGraphQL } from '../../dto/FindOneParamsGraphQL';
 import { Appointment } from './appointment.model';
 import { AppointmentService } from './appointment.service';
 import { CreateAppointmentDTO } from './dto/create-appointment';

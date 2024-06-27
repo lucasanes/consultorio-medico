@@ -1,6 +1,6 @@
 import { ValidationPipe } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { FindOneParamsGraphQL } from 'src/dto/FindOneParamsGraphQL';
+import { FindOneParamsGraphQL } from '../../dto/FindOneParamsGraphQL';
 import { Doctor } from './doctor.model';
 import { DoctorService } from './doctor.service';
 import { CreateDoctorDTO } from './dto/create-doctor';
