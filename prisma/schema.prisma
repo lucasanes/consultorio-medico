@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+// npx prisma migrate dev --name init
+
+datasource db {
+  provider = "postgresql" // ou outro banco de dados que você estiver usando
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Doctor {
+  id        Int    @id @default(autoincrement())
+  name      String
+  specialty String
+
+  Address Address?
+
+  appointments Appointment[]
+}
+
+model Patient {
+  id   Int    @id @default(autoincrement())
+  name String
+  age  Int
+
+  appointments PatientAppointment[]
+}
+
+model Appointment {
+  id   Int    @id @default(autoincrement())
+  date String
+
+  doctor   Doctor @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  doctorId Int
+
+  patients PatientAppointment[]
+}
+
+model Address {
+  id Int @id @default(autoincrement())
+
+  street       String
+  neighborhood String
+  complement   String
+  city         String
+  state        String
+
+  doctor   Doctor @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  doctorId Int    @unique
+}
+
+model PatientAppointment {
+  id            Int @id @default(autoincrement())
+  patientId     Int
+  appointmentId Int
+
+  patient     Patient     @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  appointment Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+}

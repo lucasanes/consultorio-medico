@@ -1,0 +1,112 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Patient {
+  id: Int!
+  name: String!
+  age: Float!
+  appointments: [PatientAppointment]!
+}
+
+type PatientAppointment {
+  id: Int!
+  patient: Patient!
+  appointment: Appointment!
+}
+
+type Appointment {
+  id: Int!
+  date: String!
+  doctor: Doctor!
+  patients: [PatientAppointment]!
+}
+
+type Doctor {
+  id: Int!
+  name: String!
+  specialty: String!
+  address: Address
+  appointments: [Appointment]!
+}
+
+type Address {
+  id: Int!
+  street: String!
+  neighborhood: String!
+  complement: String!
+  city: String!
+  state: String!
+  doctor: Doctor!
+}
+
+type Query {
+  doctors: [Doctor!]!
+  doctor(id: Int!): Doctor!
+  patients: [Patient!]!
+  patient(id: Int!): Patient!
+  appointments: [Appointment!]!
+  appointment(id: Int!): Appointment!
+  addresses: [Address!]!
+  address(id: Int!): Address!
+}
+
+type Mutation {
+  createDoctor(createDoctorDTO: CreateDoctorDTO!): Doctor!
+  updateDoctor(updateDoctorDTO: UpdateDoctorDTO!): Doctor!
+  removeDoctor(id: Int!): Doctor!
+  createPatient(createPatientDTO: CreatePatientDTO!): Patient!
+  updatePatient(updatePatientDTO: UpdatePatientDTO!): Patient!
+  removePatient(id: Int!): Patient!
+  createAppointment(createAppointmentDTO: CreateAppointmentDTO!): Appointment!
+  updateAppointment(updateAppointmentDTO: UpdateAppointmentDTO!): Appointment!
+  removeAppointment(id: Int!): Appointment!
+  createAddress(createAddressDTO: CreateAddressDTO!): Address!
+  updateAddress(updateAddressDTO: UpdateAddressDTO!): Address!
+  removeAddress(id: Int!): Address!
+}
+
+input CreateDoctorDTO {
+  name: String!
+  specialty: String!
+  enderecoId: Int
+}
+
+input UpdateDoctorDTO {
+  name: String
+  specialty: String
+  enderecoId: Int
+  id: Int!
+}
+
+input CreatePatientDTO {
+  name: String!
+  age: Int!
+}
+
+input UpdatePatientDTO {
+  id: Int!
+}
+
+input CreateAppointmentDTO {
+  date: String!
+  doctorId: Int!
+  patientsId: [Int!]!
+}
+
+input UpdateAppointmentDTO {
+  id: Int!
+}
+
+input CreateAddressDTO {
+  street: String!
+  neighborhood: String!
+  complement: String!
+  city: String!
+  state: String!
+  doctorId: Int!
+}
+
+input UpdateAddressDTO {
+  id: Int!
+}
