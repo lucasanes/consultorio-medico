@@ -1,4 +1,6 @@
-import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { ValidationPipe } from '@nestjs/common';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { FindOneParamsGraphQL } from 'src/dto/FindOneParamsGraphQL';
 import { Doctor } from './doctor.model';
 import { DoctorService } from './doctor.service';
 import { CreateDoctorDTO } from './dto/create-doctor';
@@ -14,22 +16,28 @@ export class DoctorResolver {
   }
 
   @Query(() => Doctor, { name: 'doctor' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.doctorService.findOne(id);
+  findOne(@Args('params') params: FindOneParamsGraphQL) {
+    return this.doctorService.findOne(+params.id);
   }
 
   @Mutation(() => Doctor)
-  createDoctor(@Args('createDoctorDTO') createDoctorDTO: CreateDoctorDTO) {
+  createDoctor(
+    @Args('createDoctorDTO', new ValidationPipe())
+    createDoctorDTO: CreateDoctorDTO,
+  ) {
     return this.doctorService.create(createDoctorDTO);
   }
 
   @Mutation(() => Doctor)
-  updateDoctor(@Args('updateDoctorDTO') updateDoctorDTO: UpdateDoctorDTO) {
+  updateDoctor(
+    @Args('updateDoctorDTO', new ValidationPipe())
+    updateDoctorDTO: UpdateDoctorDTO,
+  ) {
     return this.doctorService.update(updateDoctorDTO.id, updateDoctorDTO);
   }
 
   @Mutation(() => Doctor)
-  removeDoctor(@Args('id', { type: () => Int }) id: number) {
-    return this.doctorService.remove(id);
+  removeDoctor(@Args('params') params: FindOneParamsGraphQL) {
+    return this.doctorService.remove(+params.id);
   }
 }

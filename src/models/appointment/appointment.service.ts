@@ -76,14 +76,16 @@ export class AppointmentService {
   async update(id: number, data: UpdateAppointmentDTO) {
     await this.findOne(id);
 
-    const doctor = await this.prisma.doctor.findUnique({
-      where: { id: data.doctorId },
-    });
+    if (data.doctorId) {
+      const doctor = await this.prisma.doctor.findUnique({
+        where: { id: data.doctorId },
+      });
 
-    if (!doctor) {
-      throw new NotFoundException(
-        `Médico com ID ${data.doctorId} não encontrado.`,
-      );
+      if (!doctor) {
+        throw new NotFoundException(
+          `Médico com ID ${data.doctorId} não encontrado.`,
+        );
+      }
     }
 
     data.patientsId.forEach(async (patientId) => {

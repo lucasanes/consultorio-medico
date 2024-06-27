@@ -27,6 +27,27 @@ export class DoctorService {
   }
 
   async create(data: CreateDoctorDTO) {
+    if (data.enderecoId) {
+      const address = await this.prisma.address.findUnique({
+        where: { id: data.enderecoId },
+        include: {
+          doctor: true,
+        },
+      });
+
+      if (!address) {
+        throw new NotFoundException(
+          `Endereço com ID ${data.enderecoId} não encontrado.`,
+        );
+      }
+
+      if (address.doctor) {
+        throw new NotFoundException(
+          `Endereço com ID ${data.enderecoId} já está associado a um médico.`,
+        );
+      }
+    }
+
     return this.prisma.doctor.create({
       data: {
         ...data,
@@ -36,6 +57,27 @@ export class DoctorService {
 
   async update(id: number, data: UpdateDoctorDTO) {
     await this.findOne(id);
+
+    if (data.enderecoId) {
+      const address = await this.prisma.address.findUnique({
+        where: { id: data.enderecoId },
+        include: {
+          doctor: true,
+        },
+      });
+
+      if (!address) {
+        throw new NotFoundException(
+          `Endereço com ID ${data.enderecoId} não encontrado.`,
+        );
+      }
+
+      if (address.doctor) {
+        throw new NotFoundException(
+          `Endereço com ID ${data.enderecoId} já está associado a um médico.`,
+        );
+      }
+    }
 
     return this.prisma.doctor.update({
       where: { id },

@@ -4,41 +4,55 @@ Este é um projeto de API para gerenciar um sistema de consultório médico. A A
 
 ## Tecnologias Utilizadas
 
-- [NestJS](https://nestjs.com/)
-- [Prisma ORM](https://www.prisma.io/)
-- [GraphQL](https://graphql.org/)
-- [PostgreSQL](https://www.postgresql.org/)
+- **NestJS** para a construção do backend
+- **PostgreSQL** como banco de dados relacional
+- **Prisma** como ORM para interações com o banco de dados
+- **GraphQL** para consultas eficientes aos dados 
+
+## Pré-requisitos
+Lista de ferramentas necessárias:
+- [Node.js](https://nodejs.org/pt)
 
 ## Configuração do Projeto
 
 ### 1. Clone o Repositório
 
-```bash
+```sh
 git clone https://github.com/lucasanes/consultorio-medico.git
 cd consultorio-medico
 ```
 
 ### 2. Instale as dependências
 
-```bash
+```sh
 npm i
 ```
 
 ### 3. Configure o arquivo .env
 
-```bash 
-DATABASE_URL="postgresql://usuario:senha@localhost:5432/nome_do_banco"
+Para configurar o ambiente de desenvolvimento, é necessário um arquivo `.env` dentro do backend do projeto, pode simplesmente copiar o arquivo `.env.example` e renomeá-lo para `.env`.
+
+```sh
+cp .env.example .env
 ```
 
-### 4. Execute as migrações do Prisma
+## 4. Banco de Dados
+Para acessar o banco de dados, é necessário um cliente de PostgreSQL, como o [DBeaver](https://dbeaver.io/). Utilize as seguintes credenciais:
+- **Host**: localhost
+- **Port**: 5432
+- **Database**: postgres
+- **User**: postgres
+- **Password**: admin
 
-```bash
+### 5. Execute as migrações do Prisma
+
+```sh
 npx prisma migrate dev
 ```
 
-### 5. Inicie o servidor
+### 6. Inicie o servidor
 
-```bash
+```sh
 npm start
 ```
 
@@ -198,7 +212,7 @@ E a API GraphQL esterá disponível em http://localhost:3000/graphql.
       POST /doctor: Cria um novo médico.
     </li>
     <li>
-      PUT /doctor/:id: Atualiza os dados de um médico existente.
+      PATCH /doctor/:id: Atualiza os dados de um médico existente.
     </li>
     <li>
       DELETE /doctor/:id: Remove um médico pelo ID.
@@ -223,7 +237,7 @@ E a API GraphQL esterá disponível em http://localhost:3000/graphql.
       POST /patient - Cria um novo paciente.
     </li>
     <li>
-      PUT /patient/:id - Atualiza os dados de um paciente existente.
+      PATCH /patient/:id - Atualiza os dados de um paciente existente.
     </li>
     <li>
       DELETE /patient/:id - Remove um paciente pelo ID.
@@ -247,7 +261,7 @@ E a API GraphQL esterá disponível em http://localhost:3000/graphql.
       POST /appointment - Cria uma nova consulta.
     </li>
     <li>
-      PUT /appointment/:id - Atualiza os dados de uma consulta existente.
+      PATCH /appointment/:id - Atualiza os dados de uma consulta existente.
     </li>
     <li>
       DELETE /appointment/:id - Remove uma consulta pelo ID.
@@ -271,7 +285,7 @@ E a API GraphQL esterá disponível em http://localhost:3000/graphql.
       POST /address: Cria um novo endereço.
     </li>
     <li>
-      PUT /address/:id: Atualiza os dados de um endereço existente.
+      PATCH /address/:id: Atualiza os dados de um endereço existente.
     </li>
     <li>
       DELETE /address/:id: Remove um endereço pelo ID.
@@ -328,4 +342,82 @@ mutation {
     }
   }
 }
+```
+
+## Estrutura do projeto:
+
+```
+├── README.md
+├── nest-cli.json
+├── package-lock.json
+├── package.json
+├── prisma
+|  ├── migrations
+|  |  ├── 20240626165106_init
+|  |  |  └── migration.sql
+|  |  ├── 20240626182323_rename
+|  |  |  └── migration.sql
+|  |  ├── 20240626195829_add
+|  |  |  └── migration.sql
+|  |  ├── 20240627132255_on_delete
+|  |  |  └── migration.sql
+|  |  ├── 20240627133859_doctor
+|  |  |  └── migration.sql
+|  |  └── migration_lock.toml
+|  └── schema.prisma
+├── src
+|  ├── app.controller.ts
+|  ├── app.module.ts
+|  ├── app.service.ts
+|  ├── main.ts
+|  ├── models
+|  |  ├── address
+|  |  |  ├── address.controller.ts
+|  |  |  ├── address.model.ts
+|  |  |  ├── address.module.ts
+|  |  |  ├── address.resolver.ts
+|  |  |  ├── address.service.ts
+|  |  |  └── dto
+|  |  |     ├── create-address.ts
+|  |  |     └── update-address.ts
+|  |  ├── appointment
+|  |  |  ├── appointment.controller.ts
+|  |  |  ├── appointment.model.ts
+|  |  |  ├── appointment.module.ts
+|  |  |  ├── appointment.resolver.ts
+|  |  |  ├── appointment.service.ts
+|  |  |  └── dto
+|  |  |     ├── create-appointment.ts
+|  |  |     └── update-appointment.ts
+|  |  ├── doctor
+|  |  |  ├── doctor.controller.ts
+|  |  |  ├── doctor.model.ts
+|  |  |  ├── doctor.module.ts
+|  |  |  ├── doctor.resolver.ts
+|  |  |  ├── doctor.service.ts
+|  |  |  └── dto
+|  |  |     ├── create-doctor.ts
+|  |  |     └── update-doctor.ts
+|  |  ├── patient
+|  |  |  ├── dto
+|  |  |  |  ├── create-patient.ts
+|  |  |  |  └── update-patient.ts
+|  |  |  ├── patient.controller.ts
+|  |  |  ├── patient.model.ts
+|  |  |  ├── patient.module.ts
+|  |  |  ├── patient.resolver.ts
+|  |  |  └── patient.service.ts
+|  |  └── patientAppointment
+|  |     └── patientAppointment.model.ts
+|  ├── modules
+|  |  └── prisma
+|  |     ├── prisma.module.ts
+|  |     └── prisma.service.ts
+|  └── schema.gql
+├── tsconfig.build.json
+└── tsconfig.json
+
+directory: 2706 file: 22795
+
+ignored: directory (215)
 ```

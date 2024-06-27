@@ -6,7 +6,9 @@ import {
   Param,
   Patch,
   Post,
+  ValidationPipe,
 } from '@nestjs/common';
+import { FindOneParams } from 'src/dto/FindOneParams';
 import { CreatePatientDTO } from './dto/create-patient';
 import { UpdatePatientDTO } from './dto/update-patient';
 import { PatientService } from './patient.service';
@@ -21,16 +23,13 @@ export class PatientController {
   }
 
   @Get(':id')
-  findOne(
-    @Param('id')
-    id: string,
-  ) {
-    return this.patientService.findOne(+id);
+  findOne(@Param() params: FindOneParams) {
+    return this.patientService.findOne(+params.id);
   }
 
   @Post()
   create(
-    @Body()
+    @Body(new ValidationPipe())
     createPatientDTO: CreatePatientDTO,
   ) {
     return this.patientService.create(createPatientDTO);
@@ -38,19 +37,15 @@ export class PatientController {
 
   @Patch(':id')
   update(
-    @Param('id')
-    id: string,
-    @Body()
+    @Param() params: FindOneParams,
+    @Body(new ValidationPipe())
     updatePatientDTO: UpdatePatientDTO,
   ) {
-    return this.patientService.update(+id, updatePatientDTO);
+    return this.patientService.update(+params.id, updatePatientDTO);
   }
 
   @Delete(':id')
-  remove(
-    @Param('id')
-    id: string,
-  ) {
-    return this.patientService.remove(+id);
+  remove(@Param() params: FindOneParams) {
+    return this.patientService.remove(+params.id);
   }
 }

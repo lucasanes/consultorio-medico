@@ -42,28 +42,32 @@ type Address {
 
 type Query {
   doctors: [Doctor!]!
-  doctor(id: Int!): Doctor!
+  doctor(params: FindOneParamsGraphQL!): Doctor!
   patients: [Patient!]!
-  patient(id: Int!): Patient!
+  patient(params: FindOneParamsGraphQL!): Patient!
   appointments: [Appointment!]!
-  appointment(id: Int!): Appointment!
+  appointment(params: FindOneParamsGraphQL!): Appointment!
   addresses: [Address!]!
-  address(id: Int!): Address!
+  address(params: FindOneParamsGraphQL!): Address!
+}
+
+input FindOneParamsGraphQL {
+  id: Int!
 }
 
 type Mutation {
   createDoctor(createDoctorDTO: CreateDoctorDTO!): Doctor!
   updateDoctor(updateDoctorDTO: UpdateDoctorDTO!): Doctor!
-  removeDoctor(id: Int!): Doctor!
+  removeDoctor(params: FindOneParamsGraphQL!): Doctor!
   createPatient(createPatientDTO: CreatePatientDTO!): Patient!
   updatePatient(updatePatientDTO: UpdatePatientDTO!): Patient!
-  removePatient(id: Int!): Patient!
+  removePatient(params: FindOneParamsGraphQL!): Patient!
   createAppointment(createAppointmentDTO: CreateAppointmentDTO!): Appointment!
   updateAppointment(updateAppointmentDTO: UpdateAppointmentDTO!): Appointment!
-  removeAppointment(id: Int!): Appointment!
+  removeAppointment(params: FindOneParamsGraphQL!): Appointment!
   createAddress(createAddressDTO: CreateAddressDTO!): Address!
   updateAddress(updateAddressDTO: UpdateAddressDTO!): Address!
-  removeAddress(id: Int!): Address!
+  removeAddress(params: FindOneParamsGraphQL!): Address!
 }
 
 input CreateDoctorDTO {

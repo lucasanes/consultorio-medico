@@ -6,7 +6,9 @@ import {
   Param,
   Patch,
   Post,
+  ValidationPipe,
 } from '@nestjs/common';
+import { FindOneParams } from 'src/dto/FindOneParams';
 import { AppointmentService } from './appointment.service';
 import { CreateAppointmentDTO } from './dto/create-appointment';
 import { UpdateAppointmentDTO } from './dto/update-appointment';
@@ -21,16 +23,13 @@ export class AppointmentController {
   }
 
   @Get(':id')
-  findOne(
-    @Param('id')
-    id: string,
-  ) {
-    return this.appointmentService.findOne(+id);
+  findOne(@Param() params: FindOneParams) {
+    return this.appointmentService.findOne(+params.id);
   }
 
   @Post()
   create(
-    @Body()
+    @Body(new ValidationPipe())
     createAppointmentDTO: CreateAppointmentDTO,
   ) {
     return this.appointmentService.create(createAppointmentDTO);
@@ -38,19 +37,15 @@ export class AppointmentController {
 
   @Patch(':id')
   update(
-    @Param('id')
-    id: string,
-    @Body()
+    @Param() params: FindOneParams,
+    @Body(new ValidationPipe())
     updateAppointmentDTO: UpdateAppointmentDTO,
   ) {
-    return this.appointmentService.update(+id, updateAppointmentDTO);
+    return this.appointmentService.update(+params.id, updateAppointmentDTO);
   }
 
   @Delete(':id')
-  remove(
-    @Param('id')
-    id: string,
-  ) {
-    return this.appointmentService.remove(+id);
+  remove(@Param() params: FindOneParams) {
+    return this.appointmentService.remove(+params.id);
   }
 }

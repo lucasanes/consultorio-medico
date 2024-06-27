@@ -61,14 +61,16 @@ export class AddressService {
   async update(id: number, data: UpdateAddressDTO) {
     await this.findOne(id);
 
-    const doctor = await this.prisma.doctor.findUnique({
-      where: { id: data.doctorId },
-    });
+    if (data.doctorId) {
+      const doctor = await this.prisma.doctor.findUnique({
+        where: { id: data.doctorId },
+      });
 
-    if (!doctor) {
-      throw new NotFoundException(
-        `Médico com ID ${data.doctorId} não encontrado.`,
-      );
+      if (!doctor) {
+        throw new NotFoundException(
+          `Médico com ID ${data.doctorId} não encontrado.`,
+        );
+      }
     }
 
     return this.prisma.address.update({

@@ -1,4 +1,5 @@
-import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { FindOneParamsGraphQL } from 'src/dto/FindOneParamsGraphQL';
 import { Appointment } from './appointment.model';
 import { AppointmentService } from './appointment.service';
 import { CreateAppointmentDTO } from './dto/create-appointment';
@@ -14,20 +15,22 @@ export class AppointmentResolver {
   }
 
   @Query(() => Appointment, { name: 'appointment' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.appointmentService.findOne(id);
+  findOne(@Args('params') params: FindOneParamsGraphQL) {
+    return this.appointmentService.findOne(+params.id);
   }
 
   @Mutation(() => Appointment)
   createAppointment(
-    @Args('createAppointmentDTO') createAppointmentDTO: CreateAppointmentDTO,
+    @Args('createAppointmentDTO')
+    createAppointmentDTO: CreateAppointmentDTO,
   ) {
     return this.appointmentService.create(createAppointmentDTO);
   }
 
   @Mutation(() => Appointment)
   updateAppointment(
-    @Args('updateAppointmentDTO') updateAppointmentDTO: UpdateAppointmentDTO,
+    @Args('updateAppointmentDTO')
+    updateAppointmentDTO: UpdateAppointmentDTO,
   ) {
     return this.appointmentService.update(
       updateAppointmentDTO.id,
@@ -36,7 +39,7 @@ export class AppointmentResolver {
   }
 
   @Mutation(() => Appointment)
-  removeAppointment(@Args('id', { type: () => Int }) id: number) {
-    return this.appointmentService.remove(id);
+  removeAppointment(@Args('params') params: FindOneParamsGraphQL) {
+    return this.appointmentService.remove(+params.id);
   }
 }

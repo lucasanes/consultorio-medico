@@ -1,0 +1,73 @@
+├── README.md
+├── nest-cli.json
+├── package-lock.json
+├── package.json
+├── prisma
+|  ├── migrations
+|  |  ├── 20240626165106_init
+|  |  |  └── migration.sql
+|  |  ├── 20240626182323_rename
+|  |  |  └── migration.sql
+|  |  ├── 20240626195829_add
+|  |  |  └── migration.sql
+|  |  ├── 20240627132255_on_delete
+|  |  |  └── migration.sql
+|  |  ├── 20240627133859_doctor
+|  |  |  └── migration.sql
+|  |  └── migration_lock.toml
+|  └── schema.prisma
+├── src
+|  ├── app.controller.ts
+|  ├── app.module.ts
+|  ├── app.service.ts
+|  ├── main.ts
+|  ├── models
+|  |  ├── address
+|  |  |  ├── address.controller.ts
+|  |  |  ├── address.model.ts
+|  |  |  ├── address.module.ts
+|  |  |  ├── address.resolver.ts
+|  |  |  ├── address.service.ts
+|  |  |  └── dto
+|  |  |     ├── create-address.ts
+|  |  |     └── update-address.ts
+|  |  ├── appointment
+|  |  |  ├── appointment.controller.ts
+|  |  |  ├── appointment.model.ts
+|  |  |  ├── appointment.module.ts
+|  |  |  ├── appointment.resolver.ts
+|  |  |  ├── appointment.service.ts
+|  |  |  └── dto
+|  |  |     ├── create-appointment.ts
+|  |  |     └── update-appointment.ts
+|  |  ├── doctor
+|  |  |  ├── doctor.controller.ts
+|  |  |  ├── doctor.model.ts
+|  |  |  ├── doctor.module.ts
+|  |  |  ├── doctor.resolver.ts
+|  |  |  ├── doctor.service.ts
+|  |  |  └── dto
+|  |  |     ├── create-doctor.ts
+|  |  |     └── update-doctor.ts
+|  |  ├── patient
+|  |  |  ├── dto
+|  |  |  |  ├── create-patient.ts
+|  |  |  |  └── update-patient.ts
+|  |  |  ├── patient.controller.ts
+|  |  |  ├── patient.model.ts
+|  |  |  ├── patient.module.ts
+|  |  |  ├── patient.resolver.ts
+|  |  |  └── patient.service.ts
+|  |  └── patientAppointment
+|  |     └── patientAppointment.model.ts
+|  ├── modules
+|  |  └── prisma
+|  |     ├── prisma.module.ts
+|  |     └── prisma.service.ts
+|  └── schema.gql
+├── tsconfig.build.json
+└── tsconfig.json
+
+directory: 2706 file: 22795
+
+ignored: directory (215)
