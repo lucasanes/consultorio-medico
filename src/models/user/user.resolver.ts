@@ -1,6 +1,7 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { FindOneParamsGraphQL } from '../../dto/FindOneParamsGraphQL';
 import { CreateUserDTO } from './dto/create-user';
+import { SignInUserDTO } from './dto/signin-user';
 import { UpdateUserIdDTO } from './dto/update-user-id';
 import { User } from './user.model';
 import { UserService } from './user.service';
@@ -25,6 +26,14 @@ export class UserResolver {
     createUserDTO: CreateUserDTO,
   ) {
     return this.userService.create(createUserDTO);
+  }
+
+  @Mutation(() => User)
+  signIn(
+    @Args('createUserDTO')
+    signInUserDTO: SignInUserDTO,
+  ) {
+    return this.userService.signIn(signInUserDTO);
   }
 
   @Mutation(() => User)

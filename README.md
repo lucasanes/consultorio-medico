@@ -13,6 +13,91 @@ Este é um projeto de API para gerenciar um sistema de consultório médico. A A
 Lista de ferramentas necessárias:
 - [Node.js](https://nodejs.org/pt)
 
+## Importante
+
+### Criação do usuário
+
+Para executar qualquer rota, você precisa estar autenticado, logo, o primeiro passo é criar um usuário.
+OBS: O usuário pode ter o Role USER ou ADMIN. USER pode executar apenas rotas GET.
+
+Rota:
+```js
+POST /user
+```
+
+Body:
+```json
+{
+  "name": "Lucas",
+  "email": "lucas003@gmail.com",
+  "password": "Lucas123",
+  "role": "ADMIN"
+}
+```
+
+Response:
+```json
+{
+  "id": 1,
+  "name": "Lucas",
+  "email": "lucas003@gmail.com",
+  "password": "Lucas123",
+  "role": "ADMIN",
+  "isValidated": false
+}
+```
+
+### Login
+
+Após criado seu usuário, você precisará fazer login.
+
+Rota:
+```js
+POST /user/signin
+```
+
+Body:
+```json
+{
+  "email": "lucas003@gmail.com",
+  "password": "Lucas123"
+}
+```
+
+Response:
+```json
+{
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzE5NjA0NjE5LCJleHAiOjE3MTk2OTEwMTl9._4O5O5vmfkIWPl3YPSZhepMiPcqTncK7cPiE4pTpn3k"
+}
+```
+
+### Verificação
+
+Também foi criada uma integração com e-mail, então após login, será necessário a verificação do e-mail.
+Para isso, basta ir em seu email, e checar a mensagem que lhe foi enviada quando criada a conta.
+Este e-mail terá um código, irei mostrar como usá-lo.
+
+Rota:
+```js
+POST /user/verify
+```
+
+Body:
+```json
+{
+  "code": "A1B2C3"
+}
+```
+
+Response:
+```json
+{
+  "E-mail verificado."
+}
+```
+
+### Agora está tudo pronto!
+
 ## Configuração do Projeto
 
 ### 1. Clone o Repositório
@@ -69,7 +154,32 @@ Para ver a documentação da API, acesse http://localhost:3000/api.
 <ul>
 
 <li>
-  Medico
+  User
+
+  <ul>
+    <li>
+      id (Int, Primary Key)
+    </li>
+    <li>
+      name (String)
+    </li>
+    <li>
+      email (String)
+    </li>
+    <li>
+      password (String)
+    </li>
+    <li>
+      role (USER | ADMIN)
+    </li>
+    <li>
+      isValidated (Boolean)
+    </li>
+  </ul>
+</li>
+
+<li>
+  Doctor
 
   <ul>
     <li>
@@ -93,7 +203,7 @@ Para ver a documentação da API, acesse http://localhost:3000/api.
 <br>
 
 <li>
-  Paciente
+  Patient
 
   <ul>
     <li>
@@ -114,7 +224,7 @@ Para ver a documentação da API, acesse http://localhost:3000/api.
 <br>
 
 <li>
-  Consulta
+  Appointment
 
   <ul>
     <li>
@@ -201,23 +311,50 @@ Para ver a documentação da API, acesse http://localhost:3000/api.
 <ul>
 
 <li>
-  Médicos
+  User
 
   <ul>
     <li>
-      GET /doctor: Retorna todos os médicos cadastrados.
+      GET /user - Retorna todos os usuários cadastrados.
     </li>
     <li>
-      GET /doctor/:id: Retorna um médico específico pelo ID.
+      GET /user/:id - Retorna um usuário específico pelo ID.
     </li>
     <li>
-      POST /doctor: Cria um novo médico.
+      POST /user - Cria um novo usuário.
     </li>
     <li>
-      PATCH /doctor/:id: Atualiza os dados de um médico existente.
+      PATCH /user/:id - Atualiza os dados de um usuário existente.
     </li>
     <li>
-      DELETE /doctor/:id: Remove um médico pelo ID.
+      DELETE /user/:id - Remove um usuário pelo ID.
+    </li>
+    <li>
+      POST /user/signin - Efetua o login, retornando e salvando o token em memória.
+    </li>
+  </ul>
+
+</li>
+
+
+<li>
+  Doctor
+
+  <ul>
+    <li>
+      GET /doctor - Retorna todos os médicos cadastrados.
+    </li>
+    <li>
+      GET /doctor/:id - Retorna um médico específico pelo ID.
+    </li>
+    <li>
+      POST /doctor - Cria um novo médico.
+    </li>
+    <li>
+      PATCH /doctor/:id - Atualiza os dados de um médico existente.
+    </li>
+    <li>
+      DELETE /doctor/:id - Remove um médico pelo ID.
     </li>
   </ul>
 
@@ -226,7 +363,7 @@ Para ver a documentação da API, acesse http://localhost:3000/api.
 <br>
 
 <li>
-  Pacientes
+  Patient
 
   <ul>
     <li>
@@ -250,7 +387,7 @@ Para ver a documentação da API, acesse http://localhost:3000/api.
 <br>
 
 <li>
-  Consultas
+  Appointment
 
   <ul>
     <li>
@@ -274,23 +411,23 @@ Para ver a documentação da API, acesse http://localhost:3000/api.
 <br>
 
 <li>
-  Endereços
+  Address
 
   <ul>
     <li>
-      GET /address: Retorna todos os endereços cadastrados.
+      GET /address - Retorna todos os endereços cadastrados.
     </li>
     <li>
-      GET /address/:id: Retorna um endereço específico pelo ID.
+      GET /address/:id - Retorna um endereço específico pelo ID.
     </li>
     <li>
-      POST /address: Cria um novo endereço.
+      POST /address - Cria um novo endereço.
     </li>
     <li>
-      PATCH /address/:id: Atualiza os dados de um endereço existente.
+      PATCH /address/:id - Atualiza os dados de um endereço existente.
     </li>
     <li>
-      DELETE /address/:id: Remove um endereço pelo ID.
+      DELETE /address/:id - Remove um endereço pelo ID.
     </li>
   </ul>
 </li>
