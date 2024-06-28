@@ -6,13 +6,14 @@ import {
   Param,
   Patch,
   Post,
-  ValidationPipe,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { FindOneParams } from '../../dto/FindOneParams';
 import { DoctorService } from './doctor.service';
 import { CreateDoctorDTO } from './dto/create-doctor';
 import { UpdateDoctorDTO } from './dto/update-doctor';
 
+@ApiTags('doctor')
 @Controller('doctor')
 export class DoctorController {
   constructor(private readonly doctorService: DoctorService) {}
@@ -29,7 +30,7 @@ export class DoctorController {
 
   @Post()
   create(
-    @Body(new ValidationPipe())
+    @Body()
     createDoctorDTO: CreateDoctorDTO,
   ) {
     return this.doctorService.create(createDoctorDTO);
@@ -38,7 +39,7 @@ export class DoctorController {
   @Patch(':id')
   update(
     @Param() params: FindOneParams,
-    @Body(new ValidationPipe())
+    @Body()
     updateDoctorDTO: UpdateDoctorDTO,
   ) {
     return this.doctorService.update(+params.id, updateDoctorDTO);

@@ -95,22 +95,13 @@ describe('DoctorService', () => {
   });
 
   it('should update a doctor', async () => {
-    const doctorData = {
-      id: 1,
-      name: 'Dr. João Silva Atualizado',
-      specialty: 'Neurologista',
-      addressId: 1,
-    };
+    jest
+      .spyOn(service, 'update')
+      .mockImplementation(async () => doctorResponse);
 
-    const result = {
-      id: 1,
-      ...doctorData,
-      addressId: 1,
-    };
-
-    jest.spyOn(service, 'update').mockImplementation(async () => result);
-
-    expect(await service.update(1, doctorData)).toBe(result);
+    expect(await service.update(1, { id: 1, ...doctorDTO })).toBe(
+      doctorResponse,
+    );
   });
 
   it('should remove a doctor', async () => {

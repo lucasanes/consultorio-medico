@@ -8,11 +8,13 @@ import {
   Post,
   ValidationPipe,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { FindOneParams } from '../../dto/FindOneParams';
 import { AppointmentService } from './appointment.service';
 import { CreateAppointmentDTO } from './dto/create-appointment';
 import { UpdateAppointmentDTO } from './dto/update-appointment';
 
+@ApiTags('appointment')
 @Controller('appointment')
 export class AppointmentController {
   constructor(private readonly appointmentService: AppointmentService) {}

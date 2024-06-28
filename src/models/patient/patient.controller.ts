@@ -8,11 +8,13 @@ import {
   Post,
   ValidationPipe,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { FindOneParams } from '../../dto/FindOneParams';
 import { CreatePatientDTO } from './dto/create-patient';
 import { UpdatePatientDTO } from './dto/update-patient';
 import { PatientService } from './patient.service';
 
+@ApiTags('patient')
 @Controller('patient')
 export class PatientController {
   constructor(private readonly patientService: PatientService) {}

@@ -61,6 +61,8 @@ npm start
 A API REST estará disponível em http://localhost:3000.
 <br>
 E a API GraphQL esterá disponível em http://localhost:3000/graphql.
+<br>
+Para ver a documentação da API, acesse http://localhost:3000/api.
 
 ## Tabelas
 
@@ -328,7 +330,7 @@ mutation {
   createMedico(input: {
     nome: "Dr. João Silva",
     especialidade: "Cardiologista",
-    enderecoId: 1
+    addressId: 1
   }) {
     id
     nome

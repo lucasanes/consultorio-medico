@@ -1,4 +1,3 @@
-import { ValidationPipe } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { FindOneParamsGraphQL } from '../../dto/FindOneParamsGraphQL';
 import { Doctor } from './doctor.model';
@@ -22,7 +21,7 @@ export class DoctorResolver {
 
   @Mutation(() => Doctor)
   createDoctor(
-    @Args('createDoctorDTO', new ValidationPipe())
+    @Args('createDoctorDTO')
     createDoctorDTO: CreateDoctorDTO,
   ) {
     return this.doctorService.create(createDoctorDTO);
@@ -30,7 +29,7 @@ export class DoctorResolver {
 
   @Mutation(() => Doctor)
   updateDoctor(
-    @Args('updateDoctorDTO', new ValidationPipe())
+    @Args('updateDoctorDTO')
     updateDoctorDTO: UpdateDoctorDTO,
   ) {
     return this.doctorService.update(updateDoctorDTO.id, updateDoctorDTO);

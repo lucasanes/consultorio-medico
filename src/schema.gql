@@ -73,13 +73,13 @@ type Mutation {
 input CreateDoctorDTO {
   name: String!
   specialty: String!
-  enderecoId: Int
+  addressId: Int
 }
 
 input UpdateDoctorDTO {
   name: String
   specialty: String
-  enderecoId: Int
+  addressId: Float
   id: Int!
 }
 
@@ -90,6 +90,8 @@ input CreatePatientDTO {
 
 input UpdatePatientDTO {
   id: Int!
+  name: String
+  age: Int
 }
 
 input CreateAppointmentDTO {
@@ -100,6 +102,9 @@ input CreateAppointmentDTO {
 
 input UpdateAppointmentDTO {
   id: Int!
+  date: String
+  doctorId: Int
+  patientsId: [Int!]
 }
 
 input CreateAddressDTO {
@@ -113,4 +118,10 @@ input CreateAddressDTO {
 
 input UpdateAddressDTO {
   id: Int!
+  street: String
+  neighborhood: String
+  complement: String
+  city: String
+  state: String
+  doctorId: Float
 }

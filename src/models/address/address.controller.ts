@@ -8,11 +8,13 @@ import {
   Post,
   ValidationPipe,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { FindOneParams } from '../../dto/FindOneParams';
 import { AddressService } from './address.service';
 import { CreateAddressDTO } from './dto/create-address';
 import { UpdateAddressDTO } from './dto/update-address';
 
+@ApiTags('address')
 @Controller('address')
 export class AddressController {
   constructor(private readonly addressService: AddressService) {}

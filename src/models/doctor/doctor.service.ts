@@ -27,9 +27,9 @@ export class DoctorService {
   }
 
   async create(data: CreateDoctorDTO) {
-    if (data.enderecoId) {
+    if (data.addressId) {
       const address = await this.prisma.address.findUnique({
-        where: { id: data.enderecoId },
+        where: { id: data.addressId },
         include: {
           doctor: true,
         },
@@ -37,15 +37,19 @@ export class DoctorService {
 
       if (!address) {
         throw new NotFoundException(
-          `Endereço com ID ${data.enderecoId} não encontrado.`,
+          `Endereço com ID ${data.addressId} não encontrado.`,
         );
       }
 
       if (address.doctor) {
         throw new NotFoundException(
-          `Endereço com ID ${data.enderecoId} já está associado a um médico.`,
+          `Endereço com ID ${data.addressId} já está associado a um médico.`,
         );
       }
+    }
+
+    if (data.addressId == 0) {
+      throw new NotFoundException(`Endereço com ID 0 não é válido.`);
     }
 
     return this.prisma.doctor.create({
@@ -58,9 +62,9 @@ export class DoctorService {
   async update(id: number, data: UpdateDoctorDTO) {
     await this.findOne(id);
 
-    if (data.enderecoId) {
+    if (data.addressId) {
       const address = await this.prisma.address.findUnique({
-        where: { id: data.enderecoId },
+        where: { id: data.addressId },
         include: {
           doctor: true,
         },
@@ -68,15 +72,19 @@ export class DoctorService {
 
       if (!address) {
         throw new NotFoundException(
-          `Endereço com ID ${data.enderecoId} não encontrado.`,
+          `Endereço com ID ${data.addressId} não encontrado.`,
         );
       }
 
       if (address.doctor) {
         throw new NotFoundException(
-          `Endereço com ID ${data.enderecoId} já está associado a um médico.`,
+          `Endereço com ID ${data.addressId} já está associado a um médico.`,
         );
       }
+    }
+
+    if (data.addressId == 0) {
+      throw new NotFoundException(`Endereço com ID 0 não é válido.`);
     }
 
     return this.prisma.doctor.update({
