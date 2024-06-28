@@ -13,6 +13,7 @@ async function bootstrap() {
     .setTitle('Consultório Médico - API')
     .setDescription('Documentação da API do Consultório Médico com Swagger')
     .setVersion('1.0')
+    .addTag('user')
     .addTag('doctor')
     .addTag('patient')
     .addTag('appointment')

@@ -99,9 +99,7 @@ describe('AddressService', () => {
       .spyOn(service, 'update')
       .mockImplementation(async () => addressResponse);
 
-    expect(await service.update(1, { id: 1, ...addressDTO })).toBe(
-      addressResponse,
-    );
+    expect(await service.update(1, { ...addressDTO })).toBe(addressResponse);
   });
 
   it('should remove a address', async () => {

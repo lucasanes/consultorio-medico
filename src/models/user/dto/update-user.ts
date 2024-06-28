@@ -1,31 +1,30 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
-import { CreateAddressDTO } from './create-address';
+import { Role } from '@prisma/client';
+import { IsEmail } from 'class-validator';
+import { CreateUserDTO } from './create-user';
 
 @InputType()
-export class UpdateAddressDTO extends PartialType(CreateAddressDTO) {
+export class UpdateUserDTO extends PartialType(CreateUserDTO) {
   @ApiProperty({ required: false })
   @Field({ nullable: true })
-  street?: string;
+  name: string;
 
   @ApiProperty({ required: false })
   @Field({ nullable: true })
-  neighborhood?: string;
+  @IsEmail()
+  email: string;
 
   @ApiProperty({ required: false })
   @Field({ nullable: true })
-  complement?: string;
+  password: string;
 
   @ApiProperty({ required: false })
   @Field({ nullable: true })
-  city?: string;
+  role: Role;
 
   @ApiProperty({ required: false })
   @Field({ nullable: true })
-  state?: string;
-
-  @ApiProperty({ required: false })
-  @Field({ nullable: true })
-  doctorId?: number;
+  isValidated: boolean;
 }

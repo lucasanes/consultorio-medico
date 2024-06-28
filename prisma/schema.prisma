@@ -15,11 +15,18 @@ generator client {
   provider = "prisma-client-js"
 }
 
-generator nestgraphql {
-  provider               = "node node_modules/prisma-nestjs-graphql"
-  output                 = "../src/@generated/prisma-nestjs-graphql"
-  fields_Validator_from  = "class-validator"
-  fields_Validator_input = true
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id          Int     @id @default(autoincrement())
+  email       String  @unique
+  name        String
+  password    String
+  role        Role    @default(USER)
+  isValidated Boolean @default(false)
 }
 
 model Doctor {

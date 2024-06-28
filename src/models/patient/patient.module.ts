@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common';
+
 import { PrismaModule } from 'src/modules/prisma/prisma.module';
+import { AuthModule } from '../auth/auth.module';
 import { PatientController } from './patient.controller';
 import { PatientResolver } from './patient.resolver';
 import { PatientService } from './patient.service';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaModule, AuthModule],
   providers: [PatientService, PatientResolver],
   controllers: [PatientController],
 })

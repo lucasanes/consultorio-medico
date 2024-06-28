@@ -1,10 +1,17 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
 import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsInt, IsNotEmpty } from 'class-validator';
 import { CreateAppointmentDTO } from './create-appointment';
 
 @InputType()
-export class UpdateAppointmentDTO extends PartialType(CreateAppointmentDTO) {
+export class UpdateAppointmentIdDTO extends PartialType(CreateAppointmentDTO) {
+  @ApiProperty()
+  @Field(() => Int)
+  @IsNotEmpty()
+  @IsInt()
+  id: number;
+
   @ApiProperty({ required: false })
   @Field({ nullable: true })
   date?: string;

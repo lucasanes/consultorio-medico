@@ -1,7 +1,7 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { FindOneParamsGraphQL } from '../../dto/FindOneParamsGraphQL';
 import { CreatePatientDTO } from './dto/create-patient';
-import { UpdatePatientDTO } from './dto/update-patient';
+import { UpdatePatientIdDTO } from './dto/update-patient-id';
 import { Patient } from './patient.model';
 import { PatientService } from './patient.service';
 
@@ -30,7 +30,7 @@ export class PatientResolver {
   @Mutation(() => Patient)
   updatePatient(
     @Args('updatePatientDTO')
-    updatePatientDTO: UpdatePatientDTO,
+    updatePatientDTO: UpdatePatientIdDTO,
   ) {
     return this.patientService.update(updatePatientDTO.id, updatePatientDTO);
   }

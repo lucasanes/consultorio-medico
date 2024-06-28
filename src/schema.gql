@@ -40,7 +40,17 @@ type Address {
   doctor: Doctor!
 }
 
+type User {
+  id: Int!
+  name: String!
+  email: String!
+  password: String!
+  role: String!
+}
+
 type Query {
+  useres: [User!]!
+  user(params: FindOneParamsGraphQL!): User!
   doctors: [Doctor!]!
   doctor(params: FindOneParamsGraphQL!): Doctor!
   patients: [Patient!]!
@@ -56,18 +66,37 @@ input FindOneParamsGraphQL {
 }
 
 type Mutation {
+  createUser(createUserDTO: CreateUserDTO!): User!
+  updateUser(updateUserDTO: UpdateUserIdDTO!): User!
+  removeUser(params: FindOneParamsGraphQL!): User!
   createDoctor(createDoctorDTO: CreateDoctorDTO!): Doctor!
-  updateDoctor(updateDoctorDTO: UpdateDoctorDTO!): Doctor!
+  updateDoctor(updateDoctorDTO: UpdateDoctorIdDTO!): Doctor!
   removeDoctor(params: FindOneParamsGraphQL!): Doctor!
   createPatient(createPatientDTO: CreatePatientDTO!): Patient!
-  updatePatient(updatePatientDTO: UpdatePatientDTO!): Patient!
+  updatePatient(updatePatientDTO: UpdatePatientIdDTO!): Patient!
   removePatient(params: FindOneParamsGraphQL!): Patient!
   createAppointment(createAppointmentDTO: CreateAppointmentDTO!): Appointment!
-  updateAppointment(updateAppointmentDTO: UpdateAppointmentDTO!): Appointment!
+  updateAppointment(updateAppointmentDTO: UpdateAppointmentIdDTO!): Appointment!
   removeAppointment(params: FindOneParamsGraphQL!): Appointment!
   createAddress(createAddressDTO: CreateAddressDTO!): Address!
-  updateAddress(updateAddressDTO: UpdateAddressDTO!): Address!
+  updateAddress(updateAddressDTO: UpdateAddressIdDTO!): Address!
   removeAddress(params: FindOneParamsGraphQL!): Address!
+}
+
+input CreateUserDTO {
+  name: String!
+  email: String!
+  password: String!
+  role: String!
+}
+
+input UpdateUserIdDTO {
+  id: Int!
+  name: String
+  email: String
+  password: String
+  role: String
+  isValidated: Boolean
 }
 
 input CreateDoctorDTO {
@@ -76,7 +105,7 @@ input CreateDoctorDTO {
   addressId: Int
 }
 
-input UpdateDoctorDTO {
+input UpdateDoctorIdDTO {
   name: String
   specialty: String
   addressId: Float
@@ -88,7 +117,7 @@ input CreatePatientDTO {
   age: Int!
 }
 
-input UpdatePatientDTO {
+input UpdatePatientIdDTO {
   id: Int!
   name: String
   age: Int
@@ -100,7 +129,7 @@ input CreateAppointmentDTO {
   patientsId: [Int!]!
 }
 
-input UpdateAppointmentDTO {
+input UpdateAppointmentIdDTO {
   id: Int!
   date: String
   doctorId: Int
@@ -116,7 +145,7 @@ input CreateAddressDTO {
   doctorId: Int!
 }
 
-input UpdateAddressDTO {
+input UpdateAddressIdDTO {
   id: Int!
   street: String
   neighborhood: String

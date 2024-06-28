@@ -6,8 +6,11 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { AdminGuard } from '../../common/guards/admin.guard';
+import { AuthGuard } from '../../common/guards/auth.guard';
 import { FindOneParams } from '../../dto/FindOneParams';
 import { DoctorService } from './doctor.service';
 import { CreateDoctorDTO } from './dto/create-doctor';
@@ -19,16 +22,19 @@ export class DoctorController {
   constructor(private readonly doctorService: DoctorService) {}
 
   @Get()
+  @UseGuards(AuthGuard)
   findAll() {
     return this.doctorService.findAll();
   }
 
   @Get(':id')
+  @UseGuards(AuthGuard)
   findOne(@Param() params: FindOneParams) {
     return this.doctorService.findOne(+params.id);
   }
 
   @Post()
+  @UseGuards(AdminGuard)
   create(
     @Body()
     createDoctorDTO: CreateDoctorDTO,
@@ -37,6 +43,7 @@ export class DoctorController {
   }
 
   @Patch(':id')
+  @UseGuards(AdminGuard)
   update(
     @Param() params: FindOneParams,
     @Body()
@@ -46,6 +53,7 @@ export class DoctorController {
   }
 
   @Delete(':id')
+  @UseGuards(AdminGuard)
   remove(@Param() params: FindOneParams) {
     return this.doctorService.remove(+params.id);
   }

@@ -1,3 +1,4 @@
+import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { FindOneParams } from 'src/dto/FindOneParams';
 import { DoctorController } from '../doctor.controller';
@@ -60,6 +61,7 @@ describe('DoctorController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [DoctorController],
       providers: [
+        JwtService,
         {
           provide: DoctorService,
           useValue: {
@@ -112,7 +114,7 @@ describe('DoctorController', () => {
       .mockImplementation(async () => doctorResponse);
 
     const params: FindOneParams = { id: 1 };
-    expect(await controller.update(params, { id: 1, ...doctorDTO })).toBe(
+    expect(await controller.update(params, { ...doctorDTO })).toBe(
       doctorResponse,
     );
   });

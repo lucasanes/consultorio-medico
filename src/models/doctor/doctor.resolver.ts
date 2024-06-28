@@ -3,7 +3,7 @@ import { FindOneParamsGraphQL } from '../../dto/FindOneParamsGraphQL';
 import { Doctor } from './doctor.model';
 import { DoctorService } from './doctor.service';
 import { CreateDoctorDTO } from './dto/create-doctor';
-import { UpdateDoctorDTO } from './dto/update-doctor';
+import { UpdateDoctorIdDTO } from './dto/update-doctor-id';
 
 @Resolver(() => Doctor)
 export class DoctorResolver {
@@ -30,7 +30,7 @@ export class DoctorResolver {
   @Mutation(() => Doctor)
   updateDoctor(
     @Args('updateDoctorDTO')
-    updateDoctorDTO: UpdateDoctorDTO,
+    updateDoctorDTO: UpdateDoctorIdDTO,
   ) {
     return this.doctorService.update(updateDoctorDTO.id, updateDoctorDTO);
   }

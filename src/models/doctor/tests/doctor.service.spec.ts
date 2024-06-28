@@ -99,9 +99,7 @@ describe('DoctorService', () => {
       .spyOn(service, 'update')
       .mockImplementation(async () => doctorResponse);
 
-    expect(await service.update(1, { id: 1, ...doctorDTO })).toBe(
-      doctorResponse,
-    );
+    expect(await service.update(1, { ...doctorDTO })).toBe(doctorResponse);
   });
 
   it('should remove a doctor', async () => {

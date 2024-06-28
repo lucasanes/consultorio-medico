@@ -3,7 +3,7 @@ import { FindOneParamsGraphQL } from '../../dto/FindOneParamsGraphQL';
 import { Address } from './address.model';
 import { AddressService } from './address.service';
 import { CreateAddressDTO } from './dto/create-address';
-import { UpdateAddressDTO } from './dto/update-address';
+import { UpdateAddressIdDTO } from './dto/update-address-id';
 
 @Resolver(() => Address)
 export class AddressResolver {
@@ -30,7 +30,7 @@ export class AddressResolver {
   @Mutation(() => Address)
   updateAddress(
     @Args('updateAddressDTO')
-    updateAddressDTO: UpdateAddressDTO,
+    updateAddressDTO: UpdateAddressIdDTO,
   ) {
     return this.addressService.update(updateAddressDTO.id, updateAddressDTO);
   }

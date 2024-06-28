@@ -110,7 +110,7 @@ describe('AppointmentService', () => {
       .spyOn(service, 'update')
       .mockImplementation(async () => appointmentResponse);
 
-    expect(await service.update(1, { id: 1, ...appointmentDTO })).toBe(
+    expect(await service.update(1, { ...appointmentDTO })).toBe(
       appointmentResponse,
     );
   });
