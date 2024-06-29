@@ -1,4 +1,4 @@
-import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from '../../../models/auth/auth.service';
 import { PrismaService } from '../../../modules/prisma/prisma.service';
@@ -73,7 +73,13 @@ describe('AppointmentService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [AppointmentService, PrismaService, AuthService, JwtService],
+      providers: [
+        AppointmentService,
+        PrismaService,
+        AuthService,
+
+        ConfigService,
+      ],
     }).compile();
 
     service = module.get<AppointmentService>(AppointmentService);

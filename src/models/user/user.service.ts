@@ -77,8 +77,7 @@ export class UserService {
       this.emailService.sendMail(
         newUser.email,
         'Bem-vindo ao Consultório Médico API!',
-        `Olá, ${newUser.name}! Seu código de verificação é: ${code}
-        `,
+        `Olá, ${newUser.name}! Seu código de verificação é: ${code}`,
       );
 
       return newUser;
@@ -143,7 +142,7 @@ export class UserService {
 
       this.auth.saveToken(token);
 
-      return token;
+      return { msg: token };
     }
 
     throw new BadRequestException(`Email e/ou senha incorretos.`);
@@ -151,7 +150,7 @@ export class UserService {
 
   async signOut() {
     this.auth.deleteToken();
-    return 'Desconectado com sucesso.';
+    return { msg: 'Desconectado com sucesso.' };
   }
 
   async verify(verifyUserDTO: VerifyUserDTO) {
@@ -180,7 +179,7 @@ export class UserService {
       where: { id: codeSaved.id },
     });
 
-    return 'Usuário verificado com sucesso.';
+    return { msg: 'Usuário verificado com sucesso.' };
   }
 
   async forgotPassword(forgotPasswordDTO: ForgotPasswordDTO) {
@@ -208,7 +207,7 @@ export class UserService {
       `Olá, ${user.name}! Para alterar sua senha, utilize o código: ${code}`,
     );
 
-    return 'Email enviado com sucesso.';
+    return { msg: 'Email enviado com sucesso.' };
   }
 
   async changePassword(changePasswordDTO: ChangePasswordDTO) {
@@ -242,7 +241,7 @@ export class UserService {
       where: { id: codeSaved.id },
     });
 
-    return 'Senha alterada com sucesso.';
+    return { msg: 'Senha alterada com sucesso.' };
   }
 
   async remove(id: number) {

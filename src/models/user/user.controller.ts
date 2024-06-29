@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { AdminGuard } from 'src/common/guards/admin.guard';
+import { AdminGuard } from '../../common/guards/admin.guard';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { FindOneParams } from '../../dto/FindOneParams';
 import { ChangePasswordDTO } from './dto/change-password';

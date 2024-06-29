@@ -1,4 +1,4 @@
-import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Role } from '@prisma/client';
 import { FindOneParams } from '../../../dto/FindOneParams';
@@ -51,8 +51,8 @@ describe('UserController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UserController],
       providers: [
-        JwtService,
         AuthService,
+        ConfigService,
         {
           provide: UserService,
           useValue: {

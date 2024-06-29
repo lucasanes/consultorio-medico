@@ -1,5 +1,7 @@
+import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { FindOneParamsGraphQL } from '../../../dto/FindOneParamsGraphQL';
+import { AuthService } from '../../../models/auth/auth.service';
 import { AddressResolver } from '../address.resolver';
 import { AddressService } from '../address.service';
 
@@ -64,6 +66,8 @@ describe('AddressResolver', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AddressResolver,
+        AuthService,
+        ConfigService,
         {
           provide: AddressService,
           useValue: {

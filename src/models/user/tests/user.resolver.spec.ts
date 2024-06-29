@@ -1,6 +1,8 @@
+import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Role } from '@prisma/client';
 import { FindOneParamsGraphQL } from '../../../dto/FindOneParamsGraphQL';
+import { AuthService } from '../../../models/auth/auth.service';
 import { UserResolver } from '../user.resolver';
 import { UserService } from '../user.service';
 
@@ -49,6 +51,8 @@ describe('UserResolver', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UserResolver,
+        AuthService,
+        ConfigService,
         {
           provide: UserService,
           useValue: {

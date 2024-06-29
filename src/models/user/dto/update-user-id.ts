@@ -15,22 +15,22 @@ export class UpdateUserIdDTO extends PartialType(CreateUserDTO) {
 
   @ApiProperty({ required: false })
   @Field({ nullable: true })
-  name: string;
+  name?: string;
 
   @ApiProperty({ required: false })
   @Field({ nullable: true })
   @IsEmail()
-  email: string;
+  email?: string;
 
   @ApiProperty({ required: false })
   @Field({ nullable: true })
-  password: string;
+  password?: string;
 
   @ApiProperty({ required: false })
   @Field({ nullable: true })
-  role: Role;
+  role?: Role;
 
   @ApiProperty({ required: false })
   @Field({ nullable: true })
-  isValidated: boolean;
+  isValidated?: boolean;
 }

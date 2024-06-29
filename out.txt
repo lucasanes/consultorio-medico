@@ -1,5 +1,6 @@
 ├── README.md
 ├── nest-cli.json
+├── out.txt
 ├── package-lock.json
 ├── package.json
 ├── prisma
@@ -14,12 +15,27 @@
 |  |  |  └── migration.sql
 |  |  ├── 20240627133859_doctor
 |  |  |  └── migration.sql
+|  |  ├── 20240628130643_add
+|  |  |  └── migration.sql
+|  |  ├── 20240628180058_add
+|  |  |  └── migration.sql
+|  |  ├── 20240628182233_add
+|  |  |  └── migration.sql
+|  |  ├── 20240629003049_model
+|  |  |  └── migration.sql
 |  |  └── migration_lock.toml
 |  └── schema.prisma
 ├── src
-|  ├── app.controller.ts
 |  ├── app.module.ts
-|  ├── app.service.ts
+|  ├── common
+|  |  ├── guards
+|  |  |  ├── admin.guard.ts
+|  |  |  └── auth.guard.ts
+|  |  └── utils
+|  |     └── generateCode.ts
+|  ├── dto
+|  |  ├── FindOneParams.ts
+|  |  └── FindOneParamsGraphQL.ts
 |  ├── main.ts
 |  ├── models
 |  |  ├── address
@@ -28,38 +44,83 @@
 |  |  |  ├── address.module.ts
 |  |  |  ├── address.resolver.ts
 |  |  |  ├── address.service.ts
-|  |  |  └── dto
-|  |  |     ├── create-address.ts
-|  |  |     └── update-address.ts
+|  |  |  ├── dto
+|  |  |  |  ├── create-address.ts
+|  |  |  |  ├── update-address-id.ts
+|  |  |  |  └── update-address.ts
+|  |  |  └── tests
+|  |  |     ├── address.controller.spec.ts
+|  |  |     ├── address.resolver.spec.ts
+|  |  |     └── address.service.spec.ts
 |  |  ├── appointment
 |  |  |  ├── appointment.controller.ts
 |  |  |  ├── appointment.model.ts
 |  |  |  ├── appointment.module.ts
 |  |  |  ├── appointment.resolver.ts
 |  |  |  ├── appointment.service.ts
-|  |  |  └── dto
-|  |  |     ├── create-appointment.ts
-|  |  |     └── update-appointment.ts
+|  |  |  ├── dto
+|  |  |  |  ├── create-appointment.ts
+|  |  |  |  ├── update-appointment-id.ts
+|  |  |  |  └── update-appointment.ts
+|  |  |  └── tests
+|  |  |     ├── appointment.controller.spec.ts
+|  |  |     ├── appointment.resolver.spec.ts
+|  |  |     └── appointment.service.spec.ts
+|  |  ├── auth
+|  |  |  ├── auth.module.ts
+|  |  |  └── auth.service.ts
 |  |  ├── doctor
 |  |  |  ├── doctor.controller.ts
 |  |  |  ├── doctor.model.ts
 |  |  |  ├── doctor.module.ts
 |  |  |  ├── doctor.resolver.ts
 |  |  |  ├── doctor.service.ts
-|  |  |  └── dto
-|  |  |     ├── create-doctor.ts
-|  |  |     └── update-doctor.ts
+|  |  |  ├── dto
+|  |  |  |  ├── create-doctor.ts
+|  |  |  |  ├── update-doctor-id.ts
+|  |  |  |  └── update-doctor.ts
+|  |  |  └── tests
+|  |  |     ├── doctor.controller.spec.ts
+|  |  |     ├── doctor.resolver.spec.ts
+|  |  |     └── doctor.service.spec.ts
+|  |  ├── email
+|  |  |  ├── email.module.ts
+|  |  |  └── email.service.ts
 |  |  ├── patient
 |  |  |  ├── dto
 |  |  |  |  ├── create-patient.ts
+|  |  |  |  ├── update-patient-id.ts
 |  |  |  |  └── update-patient.ts
 |  |  |  ├── patient.controller.ts
 |  |  |  ├── patient.model.ts
 |  |  |  ├── patient.module.ts
 |  |  |  ├── patient.resolver.ts
-|  |  |  └── patient.service.ts
-|  |  └── patientAppointment
-|  |     └── patientAppointment.model.ts
+|  |  |  ├── patient.service.ts
+|  |  |  └── tests
+|  |  |     ├── patient.controller.spec.ts
+|  |  |     ├── patient.resolver.spec.ts
+|  |  |     └── patient.service.spec.ts
+|  |  ├── patientAppointment
+|  |  |  └── patientAppointment.model.ts
+|  |  └── user
+|  |     ├── dto
+|  |     |  ├── change-password.ts
+|  |     |  ├── create-user.ts
+|  |     |  ├── forgot-password.ts
+|  |     |  ├── signin-user.ts
+|  |     |  ├── update-user-id.ts
+|  |     |  ├── update-user.ts
+|  |     |  └── verify-user.ts
+|  |     ├── msgResponse.model.ts
+|  |     ├── tests
+|  |     |  ├── user.controller.spec.ts
+|  |     |  ├── user.resolver.spec.ts
+|  |     |  └── user.service.spec.ts
+|  |     ├── user.controller.ts
+|  |     ├── user.model.ts
+|  |     ├── user.module.ts
+|  |     ├── user.resolver.ts
+|  |     └── user.service.ts
 |  ├── modules
 |  |  └── prisma
 |  |     ├── prisma.module.ts
@@ -68,6 +129,6 @@
 ├── tsconfig.build.json
 └── tsconfig.json
 
-directory: 2706 file: 22795
+directory: 3166 file: 27429
 
-ignored: directory (215)
+ignored: directory (237)

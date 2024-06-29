@@ -1,4 +1,7 @@
+import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { AdminGuard } from '../../common/guards/admin.guard';
+import { AuthGuard } from '../../common/guards/auth.guard';
 import { FindOneParamsGraphQL } from '../../dto/FindOneParamsGraphQL';
 import { Appointment } from './appointment.model';
 import { AppointmentService } from './appointment.service';
@@ -9,16 +12,19 @@ import { UpdateAppointmentIdDTO } from './dto/update-appointment-id';
 export class AppointmentResolver {
   constructor(private readonly appointmentService: AppointmentService) {}
 
+  @UseGuards(AuthGuard)
   @Query(() => [Appointment], { name: 'appointments' })
   findAll() {
     return this.appointmentService.findAll();
   }
 
+  @UseGuards(AuthGuard)
   @Query(() => Appointment, { name: 'appointment' })
   findOne(@Args('params') params: FindOneParamsGraphQL) {
     return this.appointmentService.findOne(+params.id);
   }
 
+  @UseGuards(AdminGuard)
   @Mutation(() => Appointment)
   createAppointment(
     @Args('createAppointmentDTO')
@@ -27,6 +33,7 @@ export class AppointmentResolver {
     return this.appointmentService.create(createAppointmentDTO);
   }
 
+  @UseGuards(AdminGuard)
   @Mutation(() => Appointment)
   updateAppointment(
     @Args('updateAppointmentDTO')
@@ -38,6 +45,7 @@ export class AppointmentResolver {
     );
   }
 
+  @UseGuards(AdminGuard)
   @Mutation(() => Appointment)
   removeAppointment(@Args('params') params: FindOneParamsGraphQL) {
     return this.appointmentService.remove(+params.id);

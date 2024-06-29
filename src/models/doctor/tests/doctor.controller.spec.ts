@@ -1,4 +1,4 @@
-import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { FindOneParams } from 'src/dto/FindOneParams';
 import { AuthService } from '../../../models/auth/auth.service';
@@ -62,8 +62,8 @@ describe('DoctorController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [DoctorController],
       providers: [
-        JwtService,
         AuthService,
+        ConfigService,
         {
           provide: DoctorService,
           useValue: {
