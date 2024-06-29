@@ -1,8 +1,11 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { FindOneParamsGraphQL } from '../../dto/FindOneParamsGraphQL';
+import { ChangePasswordDTO } from './dto/change-password';
 import { CreateUserDTO } from './dto/create-user';
+import { ForgotPasswordDTO } from './dto/forgot-password';
 import { SignInUserDTO } from './dto/signin-user';
 import { UpdateUserIdDTO } from './dto/update-user-id';
+import { VerifyUserDTO } from './dto/verify-user';
 import { User } from './user.model';
 import { UserService } from './user.service';
 
@@ -28,7 +31,7 @@ export class UserResolver {
     return this.userService.create(createUserDTO);
   }
 
-  @Mutation(() => User)
+  @Mutation(() => User, { name: 'signin' })
   signIn(
     @Args('createUserDTO')
     signInUserDTO: SignInUserDTO,
@@ -47,5 +50,28 @@ export class UserResolver {
   @Mutation(() => User)
   removeUser(@Args('params') params: FindOneParamsGraphQL) {
     return this.userService.remove(+params.id);
+  }
+
+  @Query(() => String, { name: 'signout' })
+  signOut() {
+    return this.userService.signOut();
+  }
+
+  @Mutation(() => String, { name: 'verify' })
+  verify(
+    @Args('params')
+    params: VerifyUserDTO,
+  ) {
+    return this.userService.verify(params);
+  }
+
+  @Mutation(() => String, { name: 'forgotPassword' })
+  forgotPassword(@Args('params') params: ForgotPasswordDTO) {
+    return this.userService.forgotPassword(params);
+  }
+
+  @Mutation(() => String, { name: 'changePassword' })
+  changePassword(@Args('params') params: ChangePasswordDTO) {
+    return this.userService.changePassword(params);
   }
 }

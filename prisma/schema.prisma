@@ -27,6 +27,15 @@ model User {
   password    String
   role        Role    @default(USER)
   isValidated Boolean @default(false)
+  Code        Code[]
+}
+
+model Code {
+  id        Int    @id @default(autoincrement())
+  code      String
+  userEmail String
+
+  user User @relation(fields: [userEmail], references: [email])
 }
 
 model Doctor {

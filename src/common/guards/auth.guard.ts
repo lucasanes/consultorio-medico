@@ -1,12 +1,14 @@
 import { CanActivate, Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+import { Role } from '@prisma/client';
+import { decode, verify } from 'jsonwebtoken';
 import { AuthService } from './../../models/auth/auth.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
-    private jwtService: JwtService,
     private auth: AuthService,
+    private configService: ConfigService,
   ) {}
 
   async canActivate(): Promise<boolean> {
@@ -15,12 +17,28 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException('Você não está autenticado.');
     }
 
+    const secret = this.configService.get<string>('JWT_SECRET');
+
     try {
-      await this.jwtService.verifyAsync(token, {
-        secret: 'oi',
-      });
+      verify(token, secret);
+
+      const payload = decode(token) as {
+        id: number;
+        role: Role;
+        isValidated: boolean;
+      };
+
+      if (!payload) {
+        throw new UnauthorizedException('Você não está autenticado.');
+      }
+
+      if (!payload.isValidated) {
+        throw new UnauthorizedException(
+          'Você não está verificado. Verifique seu email.',
+        );
+      }
     } catch (error) {
-      throw new UnauthorizedException('Você não está autenticado.');
+      throw new UnauthorizedException(error);
     }
     return true;
   }

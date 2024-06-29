@@ -51,6 +51,7 @@ type User {
 type Query {
   useres: [User!]!
   user(params: FindOneParamsGraphQL!): User!
+  signout: String!
   doctors: [Doctor!]!
   doctor(params: FindOneParamsGraphQL!): Doctor!
   patients: [Patient!]!
@@ -67,8 +68,12 @@ input FindOneParamsGraphQL {
 
 type Mutation {
   createUser(createUserDTO: CreateUserDTO!): User!
+  signin(createUserDTO: SignInUserDTO!): User!
   updateUser(updateUserDTO: UpdateUserIdDTO!): User!
   removeUser(params: FindOneParamsGraphQL!): User!
+  verify(params: VerifyUserDTO!): String!
+  forgotPassword(params: ForgotPasswordDTO!): String!
+  changePassword(params: ChangePasswordDTO!): String!
   createDoctor(createDoctorDTO: CreateDoctorDTO!): Doctor!
   updateDoctor(updateDoctorDTO: UpdateDoctorIdDTO!): Doctor!
   removeDoctor(params: FindOneParamsGraphQL!): Doctor!
@@ -90,6 +95,11 @@ input CreateUserDTO {
   role: String!
 }
 
+input SignInUserDTO {
+  email: String!
+  password: String!
+}
+
 input UpdateUserIdDTO {
   id: Int!
   name: String
@@ -97,6 +107,21 @@ input UpdateUserIdDTO {
   password: String
   role: String
   isValidated: Boolean
+}
+
+input VerifyUserDTO {
+  email: String!
+  code: String!
+}
+
+input ForgotPasswordDTO {
+  email: String!
+}
+
+input ChangePasswordDTO {
+  email: String!
+  code: String!
+  password: String!
 }
 
 input CreateDoctorDTO {

@@ -18,7 +18,8 @@ Lista de ferramentas necessárias:
 ### Criação do usuário
 
 Para executar qualquer rota, você precisa estar autenticado, logo, o primeiro passo é criar um usuário.
-OBS: O usuário pode ter o Role USER ou ADMIN. USER pode executar apenas rotas GET.
+<br>
+OBS: O usuário pode ter o Role USER ou ADMIN. Role USER pode executar apenas rotas GET.
 
 Rota:
 ```js
@@ -75,6 +76,7 @@ Response:
 
 Também foi criada uma integração com e-mail, então após login, será necessário a verificação do e-mail.
 Para isso, basta ir em seu email, e checar a mensagem que lhe foi enviada quando criada a conta.
+<br>
 Este e-mail terá um código, irei mostrar como usá-lo.
 
 Rota:
@@ -85,6 +87,7 @@ POST /user/verify
 Body:
 ```json
 {
+  "email": "lucas003@gmail.com",
   "code": "A1B2C3"
 }
 ```
@@ -93,6 +96,45 @@ Response:
 ```json
 {
   "E-mail verificado."
+}
+```
+
+## Caso tenha esquecido sua senha
+
+Você primeiro terá de enviar um código a seu e-mail.
+
+Rota:
+```js
+POST /user/forgot-password
+```
+
+Body:
+```json
+{
+  "email": "lucas003@gmail.com"
+}
+```
+
+Response:
+```json
+{
+  "Email enviado com sucesso."
+}
+```
+
+Agora poderá alterar a senha pelo uso deste código.
+
+Rota:
+```js
+POST /user/change-password
+```
+
+Body:
+```json
+{
+  "email": "lucas003@gmail.com",
+  "code": "A1B2C3",
+  "password": "Lucas12345"
 }
 ```
 
@@ -177,6 +219,26 @@ Para ver a documentação da API, acesse http://localhost:3000/api.
     </li>
   </ul>
 </li>
+
+<br>
+
+<li>
+  Code
+
+  <ul>
+    <li>
+      id (Int, Primary Key)
+    </li>
+    <li>
+      code (String)
+    </li>
+    <li>
+      userEmail (String)
+    </li>
+  </ul>
+</li>
+
+<br>
 
 <li>
   Doctor
@@ -332,10 +394,23 @@ Para ver a documentação da API, acesse http://localhost:3000/api.
     <li>
       POST /user/signin - Efetua o login, retornando e salvando o token em memória.
     </li>
+    <li>
+      POST /user/signout - Desconecta o login.
+    </li>
+    <li>
+      POST /user/verify - Verifica o e-mail do usuário.
+    </li>
+    <li>
+      POST /user/forgot-password - Envia um código pelo e-mail para alteração de senha.
+    </li>
+    <li>
+      POST /user/change-password - Altera a senha pelo uso do código.
+    </li>
   </ul>
 
 </li>
 
+<br>
 
 <li>
   Doctor

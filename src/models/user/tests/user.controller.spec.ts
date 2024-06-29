@@ -2,6 +2,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Role } from '@prisma/client';
 import { FindOneParams } from '../../../dto/FindOneParams';
+import { AuthService } from '../../../models/auth/auth.service';
 import { UserController } from '../user.controller';
 import { UserService } from '../user.service';
 
@@ -51,6 +52,7 @@ describe('UserController', () => {
       controllers: [UserController],
       providers: [
         JwtService,
+        AuthService,
         {
           provide: UserService,
           useValue: {

@@ -1,6 +1,7 @@
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { FindOneParams } from 'src/dto/FindOneParams';
+import { AuthService } from '../../../models/auth/auth.service';
 import { AddressController } from '../address.controller';
 import { AddressService } from '../address.service';
 
@@ -66,6 +67,7 @@ describe('AddressController', () => {
       controllers: [AddressController],
       providers: [
         JwtService,
+        AuthService,
         {
           provide: AddressService,
           useValue: {

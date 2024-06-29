@@ -1,6 +1,7 @@
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { FindOneParams } from 'src/dto/FindOneParams';
+import { AuthService } from '../../../models/auth/auth.service';
 import { DoctorController } from '../doctor.controller';
 import { DoctorService } from '../doctor.service';
 
@@ -62,6 +63,7 @@ describe('DoctorController', () => {
       controllers: [DoctorController],
       providers: [
         JwtService,
+        AuthService,
         {
           provide: DoctorService,
           useValue: {

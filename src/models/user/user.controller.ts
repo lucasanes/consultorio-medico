@@ -9,11 +9,15 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { AdminGuard } from 'src/common/guards/admin.guard';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { FindOneParams } from '../../dto/FindOneParams';
+import { ChangePasswordDTO } from './dto/change-password';
 import { CreateUserDTO } from './dto/create-user';
+import { ForgotPasswordDTO } from './dto/forgot-password';
 import { SignInUserDTO } from './dto/signin-user';
 import { UpdateUserDTO } from './dto/update-user';
+import { VerifyUserDTO } from './dto/verify-user';
 import { UserService } from './user.service';
 
 @ApiTags('user')
@@ -49,8 +53,30 @@ export class UserController {
     return this.userService.signIn(signInUserDTO);
   }
 
+  @Post('signout')
+  signOut() {
+    return this.userService.signOut();
+  }
+
+  @Post('verify')
+  verify(
+    @Body()
+    verifyUserDTO: VerifyUserDTO,
+  ) {
+    return this.userService.verify(verifyUserDTO);
+  }
+
+  @Post('forgot-password')
+  forgotPassword(@Body() forgotPasswordDTO: ForgotPasswordDTO) {
+    return this.userService.forgotPassword(forgotPasswordDTO);
+  }
+
+  @Patch('change-password')
+  changePassword(@Body() changePasswordDTO: ChangePasswordDTO) {
+    return this.userService.changePassword(changePasswordDTO);
+  }
+
   @Patch(':id')
-  @UseGuards(AuthGuard)
   update(
     @Param() params: FindOneParams,
     @Body()
@@ -60,7 +86,7 @@ export class UserController {
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard)
+  @UseGuards(AdminGuard)
   remove(@Param() params: FindOneParams) {
     return this.userService.remove(+params.id);
   }
