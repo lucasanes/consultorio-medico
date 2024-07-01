@@ -23,8 +23,4 @@ export class UpdateUserDTO extends PartialType(CreateUserDTO) {
   @ApiProperty({ required: false })
   @Field({ nullable: true })
   role?: Role;
-
-  @ApiProperty({ required: false })
-  @Field({ nullable: true })
-  isValidated?: boolean;
 }

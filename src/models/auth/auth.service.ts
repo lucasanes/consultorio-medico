@@ -1,18 +1,17 @@
 import { Injectable } from '@nestjs/common';
+import Redis from 'ioredis';
 
 @Injectable()
-export class AuthService {
-  private token: string | null = null;
-
-  saveToken(token: string): void {
-    this.token = token;
-  }
-
-  getToken(): string | null {
-    return this.token;
-  }
-
-  deleteToken(): void {
-    this.token = null;
+export class AuthService extends Redis {
+  constructor() {
+    super();
+    super.on('connect', () => {
+      console.log('Redis connected.');
+    });
+    this.on('error', (err) => {
+      console.log('Error on Redis');
+      console.log(err);
+      process.exit(1);
+    });
   }
 }

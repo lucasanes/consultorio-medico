@@ -18,12 +18,6 @@ export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
   @UseGuards(AuthGuard)
-  @Query(() => [User], { name: 'useres' })
-  findAll() {
-    return this.userService.findAll();
-  }
-
-  @UseGuards(AuthGuard)
   @Query(() => User, { name: 'user' })
   findOne(@Args('params') params: FindOneParamsGraphQL) {
     return this.userService.findOne(+params.id);

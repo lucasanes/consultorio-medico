@@ -21,6 +21,9 @@ export class Address {
   @Field()
   state: string;
 
+  @Field(() => Int)
+  doctorId: number;
+
   @Field(() => Doctor)
-  doctor: Doctor;
+  doctor?: Doctor;
 }

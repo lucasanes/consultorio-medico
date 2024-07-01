@@ -17,4 +17,7 @@ export class User {
 
   @Field()
   role: Role;
+
+  @Field()
+  isValidated?: boolean;
 }

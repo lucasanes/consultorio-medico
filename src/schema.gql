@@ -18,6 +18,7 @@ type PatientAppointment {
 type Appointment {
   id: Int!
   date: String!
+  doctorId: Int!
   doctor: Doctor!
   patients: [PatientAppointment]!
 }
@@ -26,7 +27,7 @@ type Doctor {
   id: Int!
   name: String!
   specialty: String!
-  address: Address
+  Address: Address
   appointments: [Appointment]!
 }
 
@@ -37,6 +38,7 @@ type Address {
   complement: String!
   city: String!
   state: String!
+  doctorId: Int!
   doctor: Doctor!
 }
 
@@ -50,10 +52,11 @@ type User {
   email: String!
   password: String!
   role: String!
+  isValidated: Boolean!
 }
 
 type Query {
-  useres: [User!]!
+  users: [User!]!
   user(params: FindOneParamsGraphQL!): User!
   signout: MsgResponse!
   doctors: [Doctor!]!
@@ -105,7 +108,6 @@ input UpdateUserIdDTO {
   email: String
   password: String
   role: String
-  isValidated: Boolean
 }
 
 input SignInUserDTO {

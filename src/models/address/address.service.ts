@@ -31,31 +31,27 @@ export class AddressService {
   }
 
   async create(data: CreateAddressDTO) {
-    try {
-      const doctor = await this.prisma.doctor.findUnique({
-        where: { id: data.doctorId },
-        include: { Address: true },
-      });
+    const doctor = await this.prisma.doctor.findUnique({
+      where: { id: data.doctorId },
+      include: { Address: true },
+    });
 
-      if (!doctor) {
-        throw new NotFoundException(
-          `Médico com ID ${data.doctorId} não encontrado.`,
-        );
-      }
-
-      if (doctor.Address) {
-        throw new BadRequestException(
-          `Médico com ID ${data.doctorId} já possui um endereço.`,
-        );
-      }
-
-      return this.prisma.address.create({
-        data: { ...data },
-        include: { doctor: true },
-      });
-    } catch (error) {
-      throw new BadRequestException(error);
+    if (!doctor) {
+      throw new NotFoundException(
+        `Médico com ID ${data.doctorId} não encontrado.`,
+      );
     }
+
+    if (doctor.Address) {
+      throw new BadRequestException(
+        `Médico com ID ${data.doctorId} já possui um endereço.`,
+      );
+    }
+
+    return this.prisma.address.create({
+      data: { ...data },
+      include: { doctor: true },
+    });
   }
 
   async update(id: number, data: UpdateAddressDTO) {

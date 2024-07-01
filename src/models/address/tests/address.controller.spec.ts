@@ -2,11 +2,13 @@ import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { FindOneParams } from 'src/dto/FindOneParams';
 import { AuthService } from '../../../models/auth/auth.service';
+import { PrismaService } from '../../../modules/prisma/prisma.service';
 import { AddressController } from '../address.controller';
 import { AddressService } from '../address.service';
 
 describe('AddressController', () => {
   let controller: AddressController;
+  let authService: AuthService;
   let service: AddressService;
 
   const addressDTO = {
@@ -62,11 +64,16 @@ describe('AddressController', () => {
     doctorId: 1,
   };
 
+  afterEach(() => {
+    authService.disconnect();
+  });
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AddressController],
       providers: [
         AuthService,
+        PrismaService,
         ConfigService,
         {
           provide: AddressService,
@@ -81,8 +88,13 @@ describe('AddressController', () => {
       ],
     }).compile();
 
+    authService = module.get<AuthService>(AuthService);
     controller = module.get<AddressController>(AddressController);
     service = module.get<AddressService>(AddressService);
+  });
+
+  afterEach(() => {
+    authService.disconnect();
   });
 
   it('should be defined', () => {

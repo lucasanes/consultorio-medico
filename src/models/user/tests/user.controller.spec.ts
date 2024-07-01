@@ -3,11 +3,14 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Role } from '@prisma/client';
 import { FindOneParams } from '../../../dto/FindOneParams';
 import { AuthService } from '../../../models/auth/auth.service';
+import { PrismaService } from '../../../modules/prisma/prisma.service';
 import { UserController } from '../user.controller';
 import { UserService } from '../user.service';
 
 describe('UserController', () => {
   let controller: UserController;
+
+  let authService: AuthService;
   let service: UserService;
 
   const userDTO = {
@@ -47,11 +50,16 @@ describe('UserController', () => {
     isValidated: false,
   };
 
+  afterEach(() => {
+    authService.disconnect();
+  });
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UserController],
       providers: [
         AuthService,
+        PrismaService,
         ConfigService,
         {
           provide: UserService,
@@ -67,6 +75,7 @@ describe('UserController', () => {
     }).compile();
 
     controller = module.get<UserController>(UserController);
+    authService = module.get<AuthService>(AuthService);
     service = module.get<UserService>(UserService);
   });
 

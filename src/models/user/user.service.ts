@@ -45,82 +45,74 @@ export class UserService {
   }
 
   async create(data: CreateUserDTO) {
-    try {
-      if (Role[data.role] === undefined) {
-        throw new BadRequestException(`Cargo inválido.`);
-      }
-
-      const user = await this.prisma.user.findUnique({
-        where: { email: data.email },
-      });
-
-      if (user) {
-        throw new BadRequestException(`Email já cadastrado.`);
-      }
-
-      const hashedPassword = await bcrypt.hash(data.password, 10);
-
-      const newUser = await this.prisma.user.create({
-        data: { ...data, password: hashedPassword },
-      });
-
-      const code = (await this.generateCode.gerarCodigo()).toString();
-
-      const saveCode = await this.prisma.code.create({
-        data: { code, userEmail: newUser.email },
-      });
-
-      if (!saveCode) {
-        throw new BadRequestException(`Erro ao salvar código.`);
-      }
-
-      this.emailService.sendMail(
-        newUser.email,
-        'Bem-vindo ao Consultório Médico API!',
-        `Olá, ${newUser.name}! Seu código de verificação é: ${code}`,
-      );
-
-      return newUser;
-    } catch (error) {
-      throw new BadRequestException(error);
+    if (Role[data.role] === undefined) {
+      throw new BadRequestException(`Cargo inválido.`);
     }
+
+    const user = await this.prisma.user.findUnique({
+      where: { email: data.email },
+    });
+
+    if (user) {
+      throw new BadRequestException(`Email já cadastrado.`);
+    }
+
+    const hashedPassword = await bcrypt.hash(data.password, 10);
+
+    const newUser = await this.prisma.user.create({
+      data: { ...data, password: hashedPassword },
+    });
+
+    const code = (await this.generateCode.gerarCodigo()).toString();
+
+    const saveCode = await this.prisma.code.create({
+      data: { code, userEmail: newUser.email },
+    });
+
+    if (!saveCode) {
+      throw new BadRequestException(`Erro ao salvar código.`);
+    }
+
+    this.emailService.sendMail(
+      newUser.email,
+      'Bem-vindo ao Consultório Médico API!',
+      `Olá, ${newUser.name}! Seu código de verificação é: ${code}`,
+    );
+
+    return newUser;
   }
 
   async update(id: number, data: UpdateUserDTO) {
-    try {
-      const user = await this.findOne(id);
+    const user = await this.findOne(id);
 
-      if (!user) {
-        throw new NotFoundException(`Usuário não encontrado.`);
-      }
-
-      if (data.role && Role[data.role] === undefined) {
-        throw new BadRequestException(`Cargo inválido.`);
-      }
-
-      if (data.email) {
-        const userWithSameEmail = await this.prisma.user.findFirst({
-          where: { email: data.email },
-        });
-
-        if (userWithSameEmail && userWithSameEmail.id !== id) {
-          throw new BadRequestException(`Email já cadastrado.`);
-        }
-      }
-
-      if (data.password) {
-        data.password = await bcrypt.hash(data.password, 10);
-      }
-
-      return this.prisma.user.update({
-        where: { id },
-        data: {
-          ...data,
-        },
-      });
-    } catch (error) {
-      throw new BadRequestException(error);
+    if (!user) {
+      throw new NotFoundException(`Usuário não encontrado.`);
     }
+
+    if (data.role && Role[data.role] === undefined) {
+      throw new BadRequestException(`Cargo inválido.`);
+    }
+
+    if (data.email) {
+      const userWithSameEmail = await this.prisma.user.findUnique({
+        where: { email: data.email },
+      });
+
+      if (userWithSameEmail && userWithSameEmail.id !== id) {
+        throw new BadRequestException(`Email já cadastrado.`);
+      }
+    }
+
+    if (data.password) {
+      data.password = await bcrypt.hash(data.password, 10);
+    }
+
+    return this.prisma.user.update({
+      where: { id },
+      data: {
+        ...data,
+      },
+    });
   }
 
   async signIn(data: SignInUserDTO) {
@@ -131,8 +123,6 @@ export class UserService {
     if (user && (await bcrypt.compare(data.password, user.password))) {
       const payload = {
         id: user.id,
-        role: user.role,
-        isValidated: user.isValidated,
       };
 
       const secret = this.configService.get<string>('JWT_SECRET');
@@ -140,7 +130,7 @@ export class UserService {
 
       const token = sign(payload, secret, { expiresIn });
 
-      this.auth.saveToken(token);
+      await this.auth.set('token', token);
 
       return { msg: token };
     }
@@ -149,7 +139,7 @@ export class UserService {
   }
 
   async signOut() {
-    this.auth.deleteToken();
+    await this.auth.del('token');
     return { msg: 'Desconectado com sucesso.' };
   }
 

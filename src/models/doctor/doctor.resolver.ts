@@ -14,13 +14,13 @@ export class DoctorResolver {
 
   @UseGuards(AuthGuard)
   @Query(() => [Doctor], { name: 'doctors' })
-  findAll() {
+  findAll(): Promise<Doctor[]> {
     return this.doctorService.findAll();
   }
 
   @UseGuards(AuthGuard)
   @Query(() => Doctor, { name: 'doctor' })
-  findOne(@Args('params') params: FindOneParamsGraphQL) {
+  findOne(@Args('params') params: FindOneParamsGraphQL): Promise<Doctor> {
     return this.doctorService.findOne(+params.id);
   }
 
@@ -29,7 +29,7 @@ export class DoctorResolver {
   createDoctor(
     @Args('createDoctorDTO')
     createDoctorDTO: CreateDoctorDTO,
-  ) {
+  ): Promise<Doctor> {
     return this.doctorService.create(createDoctorDTO);
   }
 
@@ -38,13 +38,13 @@ export class DoctorResolver {
   updateDoctor(
     @Args('updateDoctorDTO')
     updateDoctorDTO: UpdateDoctorIdDTO,
-  ) {
+  ): Promise<Doctor> {
     return this.doctorService.update(updateDoctorDTO.id, updateDoctorDTO);
   }
 
   @UseGuards(AdminGuard)
   @Mutation(() => Doctor)
-  removeDoctor(@Args('params') params: FindOneParamsGraphQL) {
+  removeDoctor(@Args('params') params: FindOneParamsGraphQL): Promise<Doctor> {
     return this.doctorService.remove(+params.id);
   }
 }

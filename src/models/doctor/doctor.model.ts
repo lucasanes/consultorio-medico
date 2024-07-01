@@ -14,8 +14,8 @@ export class Doctor {
   specialty: string;
 
   @Field(() => Address, { nullable: true })
-  address?: Address;
+  Address?: Address;
 
-  @Field(() => [Appointment], { nullable: 'items' })
+  @Field(() => [Appointment], { nullable: true })
   appointments?: Appointment[];
 }

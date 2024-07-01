@@ -1,13 +1,23 @@
-import { ConfigService } from '@nestjs/config';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthService } from '../../../models/auth/auth.service';
 import { PrismaService } from '../../../modules/prisma/prisma.service';
 import { AddressService } from '../address.service';
+import { CreateAddressDTO } from '../dto/create-address';
 
 describe('AddressService', () => {
-  let service: AddressService;
+  let addressService: AddressService;
+  let prismaService: PrismaService;
 
-  const addressDTO = {
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [AddressService, PrismaService],
+    }).compile();
+
+    addressService = module.get<AddressService>(AddressService);
+    prismaService = module.get<PrismaService>(PrismaService);
+  });
+
+  const addressDTO: CreateAddressDTO = {
     street: 'Rua A',
     complement: '123',
     neighborhood: 'Mocca',
@@ -18,97 +28,136 @@ describe('AddressService', () => {
 
   const addressResponse = {
     id: 1,
-    street: 'Rua A',
-    complement: '123',
-    neighborhood: 'Mocca',
-    city: 'São Paulo',
-    state: 'SP',
-    doctorId: 1,
-    doctor: {
-      id: 1,
-      name: 'Dr. João Silva',
-      specialty: 'Cardiologista',
-      addressId: 1,
-    },
+    ...addressDTO,
   };
 
-  const addressesResponse = [
-    {
-      id: 1,
-      street: 'Rua A',
-      complement: '123',
-      neighborhood: 'Mocca',
-      city: 'São Paulo',
-      state: 'SP',
-      doctorId: 1,
-      doctor: {
-        id: 1,
-        name: 'Dr. João Silva',
-        specialty: 'Cardiologista',
-        addressId: 1,
-      },
-    },
-  ];
+  const addressesResponse = [addressResponse];
 
   const addressDeleted = {
     id: 1,
-    street: 'Rua A',
-    complement: '123',
-    neighborhood: 'Mocca',
-    city: 'São Paulo',
-    state: 'SP',
-    doctorId: 1,
+    ...addressDTO,
   };
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [AddressService, PrismaService, AuthService, ConfigService],
-    }).compile();
+  const doctor = {
+    id: 1,
+    name: 'Doctor',
+    specialty: 'Dentist',
+  };
 
-    service = module.get<AddressService>(AddressService);
+  describe('findAll', () => {
+    it('should return all addresses with doctors', async () => {
+      jest
+        .spyOn(prismaService.address, 'findMany')
+        .mockResolvedValue(addressesResponse);
+
+      const result = await addressService.findAll();
+      expect(result).toEqual(addressesResponse);
+    });
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+  describe('findOne', () => {
+    it('should return the address with the given id', async () => {
+      jest
+        .spyOn(prismaService.address, 'findUnique')
+        .mockResolvedValue(addressResponse);
+
+      const result = await addressService.findOne(1);
+      expect(result).toEqual(addressResponse);
+    });
+
+    it('should throw NotFoundException if address not found', async () => {
+      jest.spyOn(prismaService.address, 'findUnique').mockResolvedValue(null);
+
+      await expect(addressService.findOne(1)).rejects.toThrow(
+        NotFoundException,
+      );
+    });
   });
 
-  it('should create a address', async () => {
-    jest
-      .spyOn(service, 'create')
-      .mockImplementation(async () => addressResponse);
+  describe('create', () => {
+    it('should create a new address', async () => {
+      jest.spyOn(prismaService.doctor, 'findUnique').mockResolvedValue(doctor);
+      jest
+        .spyOn(prismaService.address, 'create')
+        .mockResolvedValue(addressResponse);
 
-    expect(await service.create(addressDTO)).toEqual(addressResponse);
+      const result = await addressService.create(addressDTO);
+      expect(result).toEqual(addressResponse);
+    });
+
+    it('should throw NotFoundException if doctor not found', async () => {
+      jest.spyOn(prismaService.doctor, 'findUnique').mockResolvedValue(null);
+
+      await expect(addressService.create(addressDTO)).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+
+    it('should throw BadRequestException if doctor already has an address', async () => {
+      jest
+        .spyOn(prismaService.doctor, 'findUnique')
+        .mockResolvedValue({ ...doctor, Address: addressResponse } as any);
+
+      await expect(addressService.create(addressDTO)).rejects.toThrow(
+        BadRequestException,
+      );
+    });
   });
 
-  it('should return all addresss', async () => {
-    jest
-      .spyOn(service, 'findAll')
-      .mockImplementation(async () => addressesResponse);
+  describe('update', () => {
+    it('should update an existing address', async () => {
+      jest
+        .spyOn(prismaService.address, 'findUnique')
+        .mockResolvedValue(addressResponse);
+      jest.spyOn(prismaService.doctor, 'findUnique').mockResolvedValue(doctor);
+      jest
+        .spyOn(prismaService.address, 'update')
+        .mockResolvedValue(addressResponse);
 
-    expect(await service.findAll()).toBe(addressesResponse);
+      const result = await addressService.update(1, {
+        ...addressDTO,
+        city: 'Rio de Janeiro',
+      });
+      expect(result).toEqual(addressResponse);
+    });
+
+    it('should throw NotFoundException if address not found', async () => {
+      jest.spyOn(prismaService.address, 'findUnique').mockResolvedValue(null);
+
+      await expect(addressService.update(1, addressDTO)).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+
+    it('should throw NotFoundException if doctor not found', async () => {
+      jest
+        .spyOn(prismaService.address, 'findUnique')
+        .mockResolvedValue(addressResponse);
+      jest.spyOn(prismaService.doctor, 'findUnique').mockResolvedValue(null);
+
+      await expect(addressService.update(1, addressDTO)).rejects.toThrow(
+        NotFoundException,
+      );
+    });
   });
 
-  it('should return a address by ID', async () => {
-    jest
-      .spyOn(service, 'findOne')
-      .mockImplementation(async () => addressResponse);
+  describe('remove', () => {
+    it('should delete an existing address', async () => {
+      jest
+        .spyOn(prismaService.address, 'findUnique')
+        .mockResolvedValue(addressResponse);
+      jest
+        .spyOn(prismaService.address, 'delete')
+        .mockResolvedValue(addressDeleted);
 
-    expect(await service.findOne(1)).toBe(addressResponse);
-  });
+      const result = await addressService.remove(1);
+      expect(result).toEqual(addressDeleted);
+    });
 
-  it('should update a address', async () => {
-    jest
-      .spyOn(service, 'update')
-      .mockImplementation(async () => addressResponse);
+    it('should throw NotFoundException if address not found', async () => {
+      jest.spyOn(prismaService.address, 'findUnique').mockResolvedValue(null);
 
-    expect(await service.update(1, { ...addressDTO })).toBe(addressResponse);
-  });
-
-  it('should remove a address', async () => {
-    jest
-      .spyOn(service, 'remove')
-      .mockImplementation(async () => addressDeleted);
-
-    expect(await service.remove(1)).toBe(addressDeleted);
+      await expect(addressService.remove(1)).rejects.toThrow(NotFoundException);
+    });
   });
 });

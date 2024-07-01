@@ -1,133 +1,215 @@
-import { ConfigService } from '@nestjs/config';
+import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthService } from '../../../models/auth/auth.service';
 import { PrismaService } from '../../../modules/prisma/prisma.service';
+import { Appointment } from '../appointment.model';
 import { AppointmentService } from '../appointment.service';
+import { CreateAppointmentDTO } from '../dto/create-appointment';
 
 describe('AppointmentService', () => {
-  let service: AppointmentService;
-
-  const appointmentDTO = {
-    date: '20/12/2024',
-    doctorId: 1,
-    patientsId: [1, 2, 3],
-  };
-
-  const appointmentResponse = {
-    id: 1,
-    date: '20/12/2024',
-    doctorId: 1,
-    doctor: {
-      id: 1,
-      name: 'Dr. João Silva',
-      specialty: 'Cardiologista',
-      appointmentId: 1,
-    },
-    patients: [
-      {
-        id: 1,
-        patientId: 1,
-        appointmentId: 1,
-        patient: {
-          id: 1,
-          name: 'Maria',
-          age: 18,
-          appointments: [],
-        },
-      },
-    ],
-  };
-
-  const appointmentesResponse = [
-    {
-      id: 1,
-      date: '20/12/2024',
-      doctorId: 1,
-      doctor: {
-        id: 1,
-        name: 'Dr. João Silva',
-        specialty: 'Cardiologista',
-        appointmentId: 1,
-      },
-      patients: [
-        {
-          id: 1,
-          patientId: 1,
-          appointmentId: 1,
-          patient: {
-            id: 1,
-            name: 'Maria',
-            age: 18,
-            appointments: [],
-          },
-        },
-      ],
-    },
-  ];
-
-  const appointmentDeleted = {
-    id: 1,
-    date: '20/12/2024',
-    doctorId: 1,
-  };
+  let appointmentService: AppointmentService;
+  let prismaService: PrismaService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        AppointmentService,
-        PrismaService,
-        AuthService,
-
-        ConfigService,
-      ],
+      providers: [AppointmentService, PrismaService],
     }).compile();
 
-    service = module.get<AppointmentService>(AppointmentService);
+    appointmentService = module.get<AppointmentService>(AppointmentService);
+    prismaService = module.get<PrismaService>(PrismaService);
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+  const appointmentDTO: CreateAppointmentDTO = {
+    date: '26/10/2010',
+    doctorId: 1,
+    patientsId: [1, 2],
+  };
+
+  const appointmentResponse: Appointment = {
+    id: 1,
+    date: appointmentDTO.date,
+    doctorId: appointmentDTO.doctorId,
+    patients: appointmentDTO.patientsId.map((id) => ({
+      id: id,
+      patient: { id, name: `Paciente ${id}`, age: 30 },
+      appointment: {
+        id: 1,
+        date: appointmentDTO.date,
+        doctorId: 1,
+        doctor: null,
+      },
+    })),
+    doctor: { id: 1, name: 'Dr. João Silva', specialty: 'Cardiologista' },
+  };
+
+  const appointmentsResponse = [appointmentResponse];
+
+  const appointmentDeleted: Appointment = {
+    id: 1,
+    date: appointmentDTO.date,
+    doctorId: appointmentDTO.doctorId,
+    doctor: { id: 1, name: 'Dr. João Silva', specialty: 'Cardiologista' },
+  };
+
+  const patientResponse = {
+    id: 1,
+    name: 'Paciente 1',
+    age: 30,
+    appointments: [appointmentResponse],
+  };
+
+  describe('findAll', () => {
+    it('should return all appointments with doctors and patients', async () => {
+      jest
+        .spyOn(prismaService.appointment, 'findMany')
+        .mockResolvedValue(appointmentsResponse);
+
+      const result = await appointmentService.findAll();
+      expect(result).toEqual(appointmentsResponse);
+    });
   });
 
-  it('should create a appointment', async () => {
-    jest
-      .spyOn(service, 'create')
-      .mockImplementation(async () => appointmentResponse);
+  describe('findOne', () => {
+    it('should return the appointment with the given id', async () => {
+      jest
+        .spyOn(prismaService.appointment, 'findUnique')
+        .mockResolvedValue(appointmentResponse);
 
-    expect(await service.create(appointmentDTO)).toEqual(appointmentResponse);
+      const result = await appointmentService.findOne(1);
+      expect(result).toEqual(appointmentResponse);
+    });
+
+    it('should throw NotFoundException if appointment not found', async () => {
+      jest
+        .spyOn(prismaService.appointment, 'findUnique')
+        .mockResolvedValue(null);
+
+      await expect(appointmentService.findOne(1)).rejects.toThrow(
+        NotFoundException,
+      );
+    });
   });
 
-  it('should return all appointments', async () => {
-    jest
-      .spyOn(service, 'findAll')
-      .mockImplementation(async () => appointmentesResponse);
+  describe('create', () => {
+    it('should create a new appointment', async () => {
+      jest
+        .spyOn(prismaService.doctor, 'findUnique')
+        .mockResolvedValue(appointmentResponse.doctor);
+      jest
+        .spyOn(prismaService.patient, 'findUnique')
+        .mockResolvedValue(patientResponse);
+      jest
+        .spyOn(prismaService.appointment, 'create')
+        .mockResolvedValue(appointmentResponse);
 
-    expect(await service.findAll()).toBe(appointmentesResponse);
+      const result = await appointmentService.create(appointmentDTO);
+      expect(result).toEqual(appointmentResponse);
+    });
+
+    it('should throw NotFoundException if doctor not found', async () => {
+      jest.spyOn(prismaService.doctor, 'findUnique').mockResolvedValue(null);
+
+      await expect(appointmentService.create(appointmentDTO)).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+
+    it('should throw NotFoundException if any patient not found', async () => {
+      jest
+        .spyOn(prismaService.doctor, 'findUnique')
+        .mockResolvedValue(appointmentResponse.doctor);
+      jest
+        .spyOn(prismaService.patient, 'findUnique')
+        .mockResolvedValueOnce(patientResponse)
+        .mockResolvedValueOnce(null);
+
+      await expect(appointmentService.create(appointmentDTO)).rejects.toThrow(
+        NotFoundException,
+      );
+    });
   });
 
-  it('should return a appointment by ID', async () => {
-    jest
-      .spyOn(service, 'findOne')
-      .mockImplementation(async () => appointmentResponse);
+  describe('update', () => {
+    it('should update an existing appointment', async () => {
+      jest
+        .spyOn(prismaService.appointment, 'findUnique')
+        .mockResolvedValue(appointmentResponse);
+      jest
+        .spyOn(prismaService.doctor, 'findUnique')
+        .mockResolvedValue(appointmentResponse.doctor);
+      jest
+        .spyOn(prismaService.patient, 'findUnique')
+        .mockResolvedValue(patientResponse);
+      jest
+        .spyOn(prismaService.appointment, 'update')
+        .mockResolvedValue(appointmentResponse);
 
-    expect(await service.findOne(1)).toBe(appointmentResponse);
+      const result = await appointmentService.update(1, {
+        ...appointmentDTO,
+        date: '26/10/2010',
+      });
+      expect(result).toEqual(appointmentResponse);
+    });
+
+    it('should throw NotFoundException if appointment not found', async () => {
+      jest
+        .spyOn(prismaService.appointment, 'findUnique')
+        .mockResolvedValue(null);
+
+      await expect(
+        appointmentService.update(1, appointmentDTO),
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it('should throw NotFoundException if doctor not found', async () => {
+      jest
+        .spyOn(prismaService.appointment, 'findUnique')
+        .mockResolvedValue(appointmentResponse);
+      jest.spyOn(prismaService.doctor, 'findUnique').mockResolvedValue(null);
+
+      await expect(
+        appointmentService.update(1, appointmentDTO),
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it('should throw NotFoundException if any patient not found', async () => {
+      jest
+        .spyOn(prismaService.appointment, 'findUnique')
+        .mockResolvedValue(appointmentResponse);
+      jest
+        .spyOn(prismaService.doctor, 'findUnique')
+        .mockResolvedValue(appointmentResponse.doctor);
+      jest
+        .spyOn(prismaService.patient, 'findUnique')
+        .mockResolvedValueOnce(patientResponse)
+        .mockResolvedValueOnce(null);
+
+      await expect(
+        appointmentService.update(1, appointmentDTO),
+      ).rejects.toThrow(NotFoundException);
+    });
   });
 
-  it('should update a appointment', async () => {
-    jest
-      .spyOn(service, 'update')
-      .mockImplementation(async () => appointmentResponse);
+  describe('remove', () => {
+    it('should remove an existing appointment', async () => {
+      jest
+        .spyOn(prismaService.appointment, 'findUnique')
+        .mockResolvedValue(appointmentResponse);
+      jest
+        .spyOn(prismaService.appointment, 'delete')
+        .mockResolvedValue(appointmentDeleted);
 
-    expect(await service.update(1, { ...appointmentDTO })).toBe(
-      appointmentResponse,
-    );
-  });
+      const result = await appointmentService.remove(1);
+      expect(result).toEqual(appointmentDeleted);
+    });
 
-  it('should remove a appointment', async () => {
-    jest
-      .spyOn(service, 'remove')
-      .mockImplementation(async () => appointmentDeleted);
+    it('should throw NotFoundException if appointment not found', async () => {
+      jest
+        .spyOn(prismaService.appointment, 'findUnique')
+        .mockResolvedValue(null);
 
-    expect(await service.remove(1)).toBe(appointmentDeleted);
+      await expect(appointmentService.remove(1)).rejects.toThrow(
+        NotFoundException,
+      );
+    });
   });
 });

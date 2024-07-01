@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from './../../modules/prisma/prisma.service';
+import { Doctor } from './doctor.model';
 import { CreateDoctorDTO } from './dto/create-doctor';
 import { UpdateDoctorDTO } from './dto/update-doctor';
 
@@ -7,13 +8,13 @@ import { UpdateDoctorDTO } from './dto/update-doctor';
 export class DoctorService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll() {
+  async findAll(): Promise<Doctor[]> {
     return this.prisma.doctor.findMany({
       include: { appointments: true, Address: true },
     });
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<Doctor> {
     const doctor = await this.prisma.doctor.findUnique({
       where: { id },
       include: { appointments: true, Address: true },
@@ -26,13 +27,10 @@ export class DoctorService {
     return doctor;
   }
 
-  async create(data: CreateDoctorDTO) {
+  async create(data: CreateDoctorDTO): Promise<Doctor> {
     if (data.addressId) {
       const address = await this.prisma.address.findUnique({
         where: { id: data.addressId },
-        include: {
-          doctor: true,
-        },
       });
 
       if (!address) {
@@ -41,7 +39,7 @@ export class DoctorService {
         );
       }
 
-      if (address.doctor) {
+      if (address.doctorId) {
         throw new NotFoundException(
           `Endereço com ID ${data.addressId} já está associado a um médico.`,
         );
@@ -59,15 +57,12 @@ export class DoctorService {
     });
   }
 
-  async update(id: number, data: UpdateDoctorDTO) {
+  async update(id: number, data: UpdateDoctorDTO): Promise<Doctor> {
     await this.findOne(id);
 
     if (data.addressId) {
       const address = await this.prisma.address.findUnique({
         where: { id: data.addressId },
-        include: {
-          doctor: true,
-        },
       });
 
       if (!address) {
@@ -76,7 +71,7 @@ export class DoctorService {
         );
       }
 
-      if (address.doctor) {
+      if (address.doctorId) {
         throw new NotFoundException(
           `Endereço com ID ${data.addressId} já está associado a um médico.`,
         );
@@ -95,7 +90,7 @@ export class DoctorService {
     });
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<Doctor> {
     await this.findOne(id);
 
     return this.prisma.doctor.delete({

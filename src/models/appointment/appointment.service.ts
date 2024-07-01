@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../modules/prisma/prisma.service';
 import { CreateAppointmentDTO } from './dto/create-appointment';
 import { UpdateAppointmentDTO } from './dto/update-appointment';
@@ -31,46 +27,42 @@ export class AppointmentService {
   }
 
   async create(data: CreateAppointmentDTO) {
-    try {
-      const doctor = await this.prisma.doctor.findUnique({
-        where: { id: data.doctorId },
+    const doctor = await this.prisma.doctor.findUnique({
+      where: { id: data.doctorId },
+    });
+
+    if (!doctor) {
+      throw new NotFoundException(
+        `Médico com ID ${data.doctorId} não encontrado.`,
+      );
+    }
+
+    for (let i = 0; i < data.patientsId.length; i++) {
+      const patient = await this.prisma.patient.findUnique({
+        where: { id: data.patientsId[i] },
       });
 
-      if (!doctor) {
+      if (!patient) {
         throw new NotFoundException(
-          `Médico com ID ${data.doctorId} não encontrado.`,
+          `Paciente com ID ${data.patientsId[i]} não encontrado.`,
         );
       }
+    }
 
-      data.patientsId.forEach(async (patientId) => {
-        const patient = await this.prisma.patient.findUnique({
-          where: { id: patientId },
-        });
-
-        if (!patient) {
-          throw new NotFoundException(
-            `Paciente com ID ${patientId} não encontrado.`,
-          );
-        }
-      });
-
-      return this.prisma.appointment.create({
-        data: {
-          date: data.date,
-          doctorId: data.doctorId,
-          patients: {
-            createMany: {
-              data: data.patientsId.map((patientId) => ({
-                patientId,
-              })),
-            },
+    return this.prisma.appointment.create({
+      data: {
+        date: data.date,
+        doctorId: data.doctorId,
+        patients: {
+          createMany: {
+            data: data.patientsId.map((patientId) => ({
+              patientId,
+            })),
           },
         },
-        include: { doctor: true, patients: { include: { patient: true } } },
-      });
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+      },
+      include: { doctor: true, patients: { include: { patient: true } } },
+    });
   }
 
   async update(id: number, data: UpdateAppointmentDTO) {
@@ -88,17 +80,17 @@ export class AppointmentService {
       }
     }
 
-    data.patientsId.forEach(async (patientId) => {
+    for (let i = 0; i < data.patientsId.length; i++) {
       const patient = await this.prisma.patient.findUnique({
-        where: { id: patientId },
+        where: { id: data.patientsId[i] },
       });
 
       if (!patient) {
         throw new NotFoundException(
-          `Paciente com ID ${patientId} não encontrado.`,
+          `Paciente com ID ${data.patientsId[i]} não encontrado.`,
         );
       }
-    });
+    }
 
     return this.prisma.appointment.update({
       where: { id },

@@ -1,18 +1,19 @@
 import { CanActivate, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Role } from '@prisma/client';
 import { decode, verify } from 'jsonwebtoken';
-import { AuthService } from './../../models/auth/auth.service';
+import { AuthService } from '../../models/auth/auth.service';
+import { PrismaService } from '../../modules/prisma/prisma.service';
 
 @Injectable()
 export class AdminGuard implements CanActivate {
   constructor(
-    private auth: AuthService,
+    private authService: AuthService,
     private configService: ConfigService,
+    private prismaService: PrismaService,
   ) {}
 
   async canActivate(): Promise<boolean> {
-    const token = this.auth.getToken();
+    const token = await this.authService.get('token');
     if (!token) {
       throw new UnauthorizedException('Você não está autenticado.');
     }
@@ -24,21 +25,29 @@ export class AdminGuard implements CanActivate {
 
       const payload = decode(token) as {
         id: number;
-        role: Role;
-        isValidated: boolean;
       };
 
       if (!payload) {
         throw new UnauthorizedException('Você não está autenticado.');
       }
 
-      if (!payload.isValidated) {
+      const user = await this.prismaService.user.findUnique({
+        where: {
+          id: payload.id,
+        },
+      });
+
+      if (!user) {
+        throw new UnauthorizedException('Você não está autenticado.');
+      }
+
+      if (!user.isValidated) {
         throw new UnauthorizedException(
           'Você não está verificado. Verifique seu email.',
         );
       }
 
-      if (payload.role != 'ADMIN') {
+      if (user.role != 'ADMIN') {
         throw new UnauthorizedException(
           'Você não tem permissão para acessar esse recurso.',
         );

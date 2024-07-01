@@ -2,11 +2,14 @@ import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { FindOneParamsGraphQL } from '../../../dto/FindOneParamsGraphQL';
 import { AuthService } from '../../../models/auth/auth.service';
+import { PrismaService } from '../../../modules/prisma/prisma.service';
 import { AddressResolver } from '../address.resolver';
 import { AddressService } from '../address.service';
 
 describe('AddressResolver', () => {
   let resolver: AddressResolver;
+
+  let authService: AuthService;
   let service: AddressService;
 
   const addressDTO = {
@@ -62,11 +65,16 @@ describe('AddressResolver', () => {
     doctorId: 1,
   };
 
+  afterEach(() => {
+    authService.disconnect();
+  });
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AddressResolver,
         AuthService,
+        PrismaService,
         ConfigService,
         {
           provide: AddressService,
@@ -82,6 +90,7 @@ describe('AddressResolver', () => {
     }).compile();
 
     resolver = module.get<AddressResolver>(AddressResolver);
+    authService = module.get<AuthService>(AuthService);
     service = module.get<AddressService>(AddressService);
   });
 

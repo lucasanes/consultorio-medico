@@ -10,8 +10,11 @@ export class Appointment {
   @Field()
   date: string;
 
+  @Field(() => Int)
+  doctorId: number;
+
   @Field(() => Doctor)
-  doctor: Doctor;
+  doctor?: Doctor;
 
   @Field(() => [PatientAppointment], { nullable: 'items' })
   patients?: PatientAppointment[];
