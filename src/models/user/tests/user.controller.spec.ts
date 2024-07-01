@@ -4,6 +4,7 @@ import { Role } from '@prisma/client';
 import { FindOneParams } from '../../../dto/FindOneParams';
 import { AuthService } from '../../../models/auth/auth.service';
 import { PrismaService } from '../../../modules/prisma/prisma.service';
+import { MsgResponse } from '../msgResponse.model';
 import { UserController } from '../user.controller';
 import { UserService } from '../user.service';
 
@@ -50,6 +51,26 @@ describe('UserController', () => {
     isValidated: false,
   };
 
+  const signInResponse: MsgResponse = {
+    msg: 'Token',
+  };
+
+  const signOutResponse: MsgResponse = {
+    msg: 'Desconectado com sucesso.',
+  };
+
+  const verifyUserResponse: MsgResponse = {
+    msg: 'Verificado com sucesso.',
+  };
+
+  const forgotPasswordResponse: MsgResponse = {
+    msg: 'Email enviado com sucesso.',
+  };
+
+  const changePasswordResponse: MsgResponse = {
+    msg: 'Senha alterada com sucesso.',
+  };
+
   afterEach(() => {
     authService.disconnect();
   });
@@ -69,6 +90,11 @@ describe('UserController', () => {
             findOne: jest.fn(),
             update: jest.fn(),
             remove: jest.fn(),
+            signIn: jest.fn(),
+            signOut: jest.fn(),
+            verify: jest.fn(),
+            forgotPassword: jest.fn(),
+            changePassword: jest.fn(),
           },
         },
       ],
@@ -115,5 +141,57 @@ describe('UserController', () => {
     jest.spyOn(service, 'remove').mockImplementation(async () => userDeleted);
     const params: FindOneParams = { id: 1 };
     expect(await controller.remove(params)).toBe(userDeleted);
+  });
+
+  it('should sign in a user', async () => {
+    jest
+      .spyOn(service, 'signIn')
+      .mockImplementation(async () => signInResponse);
+
+    const params = { email: 'lucas@gmail.com', password: '123456' };
+    expect(await controller.signin(params)).toBe(signInResponse);
+  });
+
+  it('should sign out a user', async () => {
+    jest
+      .spyOn(service, 'signOut')
+      .mockImplementation(async () => signOutResponse);
+
+    expect(await controller.signOut()).toBe(signOutResponse);
+  });
+
+  it('should verify a user', async () => {
+    jest
+      .spyOn(service, 'verify')
+      .mockImplementation(async () => verifyUserResponse);
+
+    const params = { email: 'lucas@gmail.com', code: '123456' };
+    expect(await controller.verify(params)).toBe(verifyUserResponse);
+  });
+
+  it('should send an email to reset password', async () => {
+    jest
+      .spyOn(service, 'forgotPassword')
+      .mockImplementation(async () => forgotPasswordResponse);
+
+    const params = { email: 'lucas@gmail.com' };
+    expect(await controller.forgotPassword(params)).toBe(
+      forgotPasswordResponse,
+    );
+  });
+
+  it('should change a user password', async () => {
+    jest
+      .spyOn(service, 'changePassword')
+      .mockImplementation(async () => changePasswordResponse);
+
+    const params = {
+      email: 'lucas@gmail.com',
+      code: '123456',
+      password: '123456',
+    };
+    expect(await controller.changePassword(params)).toBe(
+      changePasswordResponse,
+    );
   });
 });

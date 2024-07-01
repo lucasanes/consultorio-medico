@@ -14,6 +14,11 @@ export class AddressService {
   async findAll() {
     return this.prisma.address.findMany({
       include: { doctor: true },
+      orderBy: {
+        doctor: {
+          name: 'asc',
+        },
+      },
     });
   }
 

@@ -1,6 +1,6 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsInt, IsNotEmpty, IsString } from 'class-validator';
+import { IsArray, IsInt, IsNotEmpty, IsString, Matches } from 'class-validator';
 
 @InputType()
 export class CreateAppointmentDTO {
@@ -8,6 +8,9 @@ export class CreateAppointmentDTO {
   @Field()
   @IsNotEmpty()
   @IsString()
+  @Matches(/^\d{4}-\d{2}-\d{2}$/, {
+    message: 'Date must be in the format YYYY-MM-DD',
+  })
   date: string;
 
   @ApiProperty()

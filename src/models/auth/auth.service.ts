@@ -9,7 +9,7 @@ export class AuthService extends Redis {
       console.log('Redis connected.');
     });
     this.on('error', (err) => {
-      console.log('Error on Redis');
+      console.log('Error on Redis.');
       console.log(err);
       process.exit(1);
     });

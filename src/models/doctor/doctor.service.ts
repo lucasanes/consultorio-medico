@@ -10,7 +10,17 @@ export class DoctorService {
 
   async findAll(): Promise<Doctor[]> {
     return this.prisma.doctor.findMany({
-      include: { appointments: true, Address: true },
+      include: {
+        appointments: {
+          orderBy: {
+            date: 'asc',
+          },
+        },
+        Address: true,
+      },
+      orderBy: {
+        name: 'asc',
+      },
     });
   }
 

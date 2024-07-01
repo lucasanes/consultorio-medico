@@ -1,4 +1,119 @@
 ├── README.md
+├── coverage
+|  ├── clover.xml
+|  ├── coverage-final.json
+|  ├── lcov-report
+|  |  ├── base.css
+|  |  ├── block-navigation.js
+|  |  ├── favicon.png
+|  |  ├── index.html
+|  |  ├── prettify.css
+|  |  ├── prettify.js
+|  |  ├── sort-arrow-sprite.png
+|  |  ├── sorter.js
+|  |  └── src
+|  |     ├── app.module.ts.html
+|  |     ├── common
+|  |     |  ├── guards
+|  |     |  |  ├── admin.guard.ts.html
+|  |     |  |  ├── auth.guard.ts.html
+|  |     |  |  └── index.html
+|  |     |  └── utils
+|  |     |     ├── generateCode.ts.html
+|  |     |     └── index.html
+|  |     ├── dto
+|  |     |  ├── FindOneParams.ts.html
+|  |     |  ├── FindOneParamsGraphQL.ts.html
+|  |     |  └── index.html
+|  |     ├── index.html
+|  |     ├── main.ts.html
+|  |     ├── models
+|  |     |  ├── address
+|  |     |  |  ├── address.controller.ts.html
+|  |     |  |  ├── address.model.ts.html
+|  |     |  |  ├── address.module.ts.html
+|  |     |  |  ├── address.resolver.ts.html
+|  |     |  |  ├── address.service.ts.html
+|  |     |  |  ├── dto
+|  |     |  |  |  ├── create-address.ts.html
+|  |     |  |  |  ├── index.html
+|  |     |  |  |  ├── update-address-id.ts.html
+|  |     |  |  |  └── update-address.ts.html
+|  |     |  |  └── index.html
+|  |     |  ├── appointment
+|  |     |  |  ├── appointment.controller.ts.html
+|  |     |  |  ├── appointment.model.ts.html
+|  |     |  |  ├── appointment.module.ts.html
+|  |     |  |  ├── appointment.resolver.ts.html
+|  |     |  |  ├── appointment.service.ts.html
+|  |     |  |  ├── dto
+|  |     |  |  |  ├── create-appointment.ts.html
+|  |     |  |  |  ├── index.html
+|  |     |  |  |  ├── update-appointment-id.ts.html
+|  |     |  |  |  └── update-appointment.ts.html
+|  |     |  |  └── index.html
+|  |     |  ├── auth
+|  |     |  |  ├── auth.module.ts.html
+|  |     |  |  ├── auth.service.ts.html
+|  |     |  |  └── index.html
+|  |     |  ├── doctor
+|  |     |  |  ├── doctor.controller.ts.html
+|  |     |  |  ├── doctor.model.ts.html
+|  |     |  |  ├── doctor.module.ts.html
+|  |     |  |  ├── doctor.resolver.ts.html
+|  |     |  |  ├── doctor.service.ts.html
+|  |     |  |  ├── dto
+|  |     |  |  |  ├── create-doctor.ts.html
+|  |     |  |  |  ├── index.html
+|  |     |  |  |  ├── update-doctor-id.ts.html
+|  |     |  |  |  └── update-doctor.ts.html
+|  |     |  |  └── index.html
+|  |     |  ├── email
+|  |     |  |  ├── email.module.ts.html
+|  |     |  |  ├── email.service.ts.html
+|  |     |  |  └── index.html
+|  |     |  ├── patient
+|  |     |  |  ├── dto
+|  |     |  |  |  ├── create-patient.ts.html
+|  |     |  |  |  ├── index.html
+|  |     |  |  |  ├── update-patient-id.ts.html
+|  |     |  |  |  └── update-patient.ts.html
+|  |     |  |  ├── index.html
+|  |     |  |  ├── patient.controller.ts.html
+|  |     |  |  ├── patient.model.ts.html
+|  |     |  |  ├── patient.module.ts.html
+|  |     |  |  ├── patient.resolver.ts.html
+|  |     |  |  └── patient.service.ts.html
+|  |     |  ├── patientAppointment
+|  |     |  |  ├── index.html
+|  |     |  |  └── patientAppointment.model.ts.html
+|  |     |  └── user
+|  |     |     ├── dto
+|  |     |     |  ├── change-password.ts.html
+|  |     |     |  ├── create-user.ts.html
+|  |     |     |  ├── forgot-password.ts.html
+|  |     |     |  ├── index.html
+|  |     |     |  ├── signin-user.ts.html
+|  |     |     |  ├── update-user-id.ts.html
+|  |     |     |  ├── update-user.ts.html
+|  |     |     |  └── verify-user.ts.html
+|  |     |     ├── index.html
+|  |     |     ├── msgResponse.model.ts.html
+|  |     |     ├── user.controller.ts.html
+|  |     |     ├── user.model.ts.html
+|  |     |     ├── user.module.ts.html
+|  |     |     ├── user.resolver.ts.html
+|  |     |     └── user.service.ts.html
+|  |     ├── modules
+|  |     |  └── prisma
+|  |     |     ├── index.html
+|  |     |     ├── prisma.module.ts.html
+|  |     |     └── prisma.service.ts.html
+|  |     └── test
+|  |        ├── getPrismaTest.ts.html
+|  |        ├── index.html
+|  |        └── test-util.ts.html
+|  └── lcov.info
 ├── nest-cli.json
 ├── out.txt
 ├── package-lock.json
@@ -29,7 +144,9 @@
 |  ├── app.module.ts
 |  ├── common
 |  |  ├── guards
+|  |  |  ├── admin.guard.spec.ts
 |  |  |  ├── admin.guard.ts
+|  |  |  ├── auth.guard.spec.ts
 |  |  |  └── auth.guard.ts
 |  |  └── utils
 |  |     └── generateCode.ts
@@ -125,10 +242,9 @@
 |  |  └── prisma
 |  |     ├── prisma.module.ts
 |  |     └── prisma.service.ts
-|  └── schema.gql
+|  ├── schema.gql
+|  └── test
 ├── tsconfig.build.json
 └── tsconfig.json
 
-directory: 3166 file: 27429
-
-ignored: directory (237)
+directory: 4209 file: 39256

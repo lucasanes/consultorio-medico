@@ -9,14 +9,15 @@ export class AppointmentService {
 
   async findAll() {
     return this.prisma.appointment.findMany({
-      include: { doctor: true, patients: { include: { patient: true } } },
+      include: { doctor: true, patients: { select: { patient: true } } },
+      orderBy: { date: 'asc' },
     });
   }
 
   async findOne(id: number) {
     const appointment = await this.prisma.appointment.findUnique({
       where: { id },
-      include: { doctor: true, patients: { include: { patient: true } } },
+      include: { doctor: true, patients: { select: { patient: true } } },
     });
 
     if (!appointment) {
