@@ -202,6 +202,7 @@
 |  |  |     └── doctor.service.spec.ts
 |  |  ├── email
 |  |  |  ├── email.module.ts
+|  |  |  ├── email.service.spec.ts
 |  |  |  └── email.service.ts
 |  |  ├── patient
 |  |  |  ├── dto
@@ -241,10 +242,11 @@
 |  ├── modules
 |  |  └── prisma
 |  |     ├── prisma.module.ts
+|  |     ├── prisma.service.spec.ts
 |  |     └── prisma.service.ts
 |  ├── schema.gql
 |  └── test
 ├── tsconfig.build.json
 └── tsconfig.json
 
-directory: 4209 file: 39256
+directory: 3219 file: 27647

@@ -11,7 +11,10 @@ Este é um projeto de API para gerenciar um sistema de consultório médico. A A
 
 ## Pré-requisitos
 Lista de ferramentas necessárias:
+- [NPM](https://www.npmjs.com/)
 - [Node.js](https://nodejs.org/pt)
+- [PostgreSQL](https://www.postgresql.org/)
+
 
 ## Importante
 
@@ -377,9 +380,6 @@ Para ver a documentação da API, acesse http://localhost:3000/api.
 
   <ul>
     <li>
-      GET /user - Retorna todos os usuários cadastrados.
-    </li>
-    <li>
       GET /user/:id - Retorna um usuário específico pelo ID.
     </li>
     <li>
@@ -509,28 +509,31 @@ Para ver a documentação da API, acesse http://localhost:3000/api.
 
 </ul>
 
-## GraphQL Query
+## GraphQL Examples
 
 ```graphql
-query {
-  medicos {
+query Doctors {
+  doctors {
     id
-    nome
-    especialidade
-    endereco {
+    name
+    specialty
+    Address {
       id
       street
+      neighborhood
+      complement
       city
       state
-      zip
     }
-    consultas {
+    appointments {
       id
       date
-      pacientes {
-        id
-        name
-        age
+      patients {
+        patient {
+          id
+          name
+          age
+        }
       }
     }
   }
@@ -539,20 +542,17 @@ query {
 
 ```graphql
 mutation {
-  createMedico(input: {
-    nome: "Dr. João Silva",
-    especialidade: "Cardiologista",
-    addressId: 1
-  }) {
+  createDoctor(createDoctorDTO: {name: "Lucas", specialty: "Laringologista", addressId: 1}) {
     id
-    nome
-    especialidade
-    endereco {
+    name
+    specialty
+    Address {
       id
       street
+      neighborhood
+      complement
       city
       state
-      zip
     }
   }
 }
@@ -765,6 +765,7 @@ mutation {
 |  |  |     └── doctor.service.spec.ts
 |  |  ├── email
 |  |  |  ├── email.module.ts
+|  |  |  ├── email.service.spec.ts
 |  |  |  └── email.service.ts
 |  |  ├── patient
 |  |  |  ├── dto
@@ -804,11 +805,12 @@ mutation {
 |  ├── modules
 |  |  └── prisma
 |  |     ├── prisma.module.ts
+|  |     ├── prisma.service.spec.ts
 |  |     └── prisma.service.ts
 |  ├── schema.gql
 |  └── test
 ├── tsconfig.build.json
 └── tsconfig.json
 
-directory: 4209 file: 39256
+directory: 3219 file: 27647
 ```
