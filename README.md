@@ -188,11 +188,11 @@ npm start
 
 ## API
 
-A API REST estará disponível em http://localhost:3000.
+A API REST estará disponível em http://localhost:3030.
 <br>
-E a API GraphQL esterá disponível em http://localhost:3000/graphql.
+E a API GraphQL esterá disponível em http://localhost:3030/graphql.
 <br>
-Para ver a documentação da API, acesse http://localhost:3000/api.
+Para ver a documentação da API, acesse http://localhost:3030/api.
 
 ## Tabelas
 
